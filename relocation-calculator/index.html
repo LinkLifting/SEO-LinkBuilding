@@ -71,10 +71,10 @@ details[open] summary{margin-bottom:8px}
   <section class="hero">
     <div class="eyebrow">Mike's Balance prototype</div>
     <h1>Would you be better off in another country?</h1>
-    <p>See what changes when you move: money, work, happiness, healthy years, healthcare and bureaucracy. Country-level estimates, not a personal forecast.</p>
+    <p>See what changes when you move: money, work, happiness, healthy years, healthcare, bureaucracy and safety. Country-level estimates, not a personal forecast.</p>
 
     <div class="controls">
-      <div class="control"><label>FROM</label><select id="from">
+      <div class="control"><label for="from">FROM</label><select id="from">
 <option value="ARG">Argentina</option>
 <option value="AUS">Australia</option>
 <option value="AUT">Austria</option>
@@ -131,7 +131,7 @@ details[open] summary{margin-bottom:8px}
 <option value="VNM">Vietnam</option>
 </select></div>
       <div class="arrow">→</div>
-      <div class="control"><label>TO</label><select id="to">
+      <div class="control"><label for="to">TO</label><select id="to">
 <option value="ARG">Argentina</option>
 <option value="AUS">Australia</option>
 <option value="AUT">Austria</option>
@@ -440,8 +440,7 @@ function render(){
   // Safety
   const sA=num(A.safety_walk_alone_pct), sB=num(B.safety_walk_alone_pct);
   const safetyDelta=sB-sA;
-  const safetyRelative=(sB/sA)-1;
-  setVal("safetyValue",pct(safetyRelative,1),cls(safetyRelative,true,.015));
+  setVal("safetyValue",signed(safetyDelta,0)+" pts",cls(safetyDelta,true,1.5));
   $("#safetyText").textContent=`${sA.toFixed(0)}% → ${sB.toFixed(0)}% feel safe walking alone at night.`;
   $("#safetyWhy").innerHTML=`Gallup asks nationally representative samples whether they feel safe walking alone at night where they live. `+
     `<b>${A.country}: ${sA.toFixed(0)}%</b> (${A.safety_year}); <b>${B.country}: ${sB.toFixed(0)}%</b> (${B.safety_year}). `+
@@ -469,9 +468,9 @@ function render(){
   if(safetyDelta>8) ups.push("safety");
   if(safetyDelta<-8) downs.push("safety");
   let sentence="";
-  if(ups.length&&downs.length) sentence=`The clearest upside is ${ups[0]}; the main trade-off is ${downs[0]}.`;
-  else if(ups.length) sentence=`This comparison leans positive, led by ${ups[0]}.`;
-  else if(downs.length) sentence=`This comparison leans negative, mainly because of ${downs[0]}.`;
+  if(ups.length&&downs.length) sentence=`One clear upside is ${ups[0]}; one clear trade-off is ${downs[0]}.`;
+  else if(ups.length) sentence=`One clear positive change is ${ups[0]}.`;
+  else if(downs.length) sentence=`One clear trade-off is ${downs[0]}.`;
   else sentence="This move looks fairly balanced on the current country-level indicators.";
   $("#summarySentence").textContent=sentence+" Open any card to see what the number really means.";
 }
