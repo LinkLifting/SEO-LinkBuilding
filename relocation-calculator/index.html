@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Relocation Reality Check — Mike's Balance Prototype</title>
+<style>
+:root {
+  --bg:#f5f7f8; --card:#fff; --ink:#182026; --muted:#67727a; --line:#dfe5e8;
+  --good:#246b4b; --bad:#9b3c37; --mid:#7a6432; --accent:#256d85; --soft:#edf4f6;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:1120px;margin:0 auto;padding:34px 18px 70px}
+.hero{background:linear-gradient(145deg,#ffffff,#eef4f5);border:1px solid var(--line);border-radius:24px;padding:28px 28px 24px;box-shadow:0 12px 35px rgba(21,38,45,.06)}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:750;margin-bottom:9px}
+h1{font-size:clamp(31px,5vw,54px);letter-spacing:-.04em;line-height:1.02;margin:0 0 12px}
+.hero p{max-width:760px;color:var(--muted);font-size:17px;line-height:1.55;margin:0}
+.controls{display:grid;grid-template-columns:1fr 54px 1fr;gap:12px;align-items:end;margin-top:26px}
+.control label{font-size:12px;font-weight:750;color:var(--muted);display:block;margin:0 0 6px}
+select{width:100%;border:1px solid #cbd5d9;border-radius:12px;background:white;padding:13px 13px;font-size:16px;color:var(--ink);outline:none}
+.arrow{font-size:24px;text-align:center;padding-bottom:10px;color:var(--muted)}
+.scenarios{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.scenario{border:1px solid #ccd6da;background:#fff;border-radius:999px;padding:9px 13px;font-size:13px;font-weight:700;cursor:pointer;color:#435159}
+.scenario.active{background:#173f4b;color:#fff;border-color:#173f4b}
+.assumption{font-size:12px;color:var(--muted);margin-top:12px}
+.summary{margin-top:22px;display:flex;justify-content:space-between;gap:18px;align-items:center;border-top:1px solid var(--line);padding-top:20px}
+.summary strong{font-size:19px;letter-spacing:-.02em}
+.summary .sentence{font-size:14px;color:var(--muted);max-width:720px;line-height:1.5}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;min-height:190px;box-shadow:0 6px 20px rgba(21,38,45,.035);display:flex;flex-direction:column}
+.card.hidden{display:none}
+.kicker{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.value{font-size:34px;font-weight:820;letter-spacing:-.04em;margin:8px 0 4px}
+.value.good{color:var(--good)} .value.bad{color:var(--bad)} .value.mid{color:var(--mid)}
+.subtitle{font-size:14px;line-height:1.45;color:#3d4a51;min-height:42px}
+.bar{height:8px;background:#e7ecee;border-radius:999px;margin:14px 0 4px;overflow:hidden}
+.fill{height:100%;background:#557d8a;border-radius:999px}
+.details{margin-top:auto;border-top:1px solid #edf0f2;padding-top:12px}
+details summary{cursor:pointer;font-size:13px;font-weight:760;color:#375967;list-style:none}
+details summary::-webkit-details-marker{display:none}
+details[open] summary{margin-bottom:8px}
+.why{font-size:12.5px;color:var(--muted);line-height:1.5}
+.why b{color:#34434a}
+.badge{display:inline-block;border-radius:999px;background:var(--soft);padding:5px 8px;font-size:11px;font-weight:750;color:#4d626b;margin-top:8px}
+.note{margin-top:16px;font-size:12px;color:var(--muted);line-height:1.55;background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px 15px}
+@media(max-width:850px){.grid{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){
+ .wrap{padding:16px 12px 50px} .hero{padding:20px 16px;border-radius:18px}
+ .controls{grid-template-columns:1fr} .arrow{display:none} .grid{grid-template-columns:1fr}
+ .summary{display:block} .summary .sentence{margin-top:8px} .card{min-height:170px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <div class="eyebrow">Mike's Balance prototype</div>
+    <h1>Would you be better off in another country?</h1>
+    <p>A rough reality check for money, work, life satisfaction, health and bureaucracy. It compares country-level conditions, not your destiny.</p>
+
+    <div class="controls">
+      <div class="control"><label>FROM</label><select id="from">
+<option value="ARG">Argentina</option>
+<option value="AUS">Australia</option>
+<option value="AUT">Austria</option>
+<option value="BEL">Belgium</option>
+<option value="BRA">Brazil</option>
+<option value="BGR">Bulgaria</option>
+<option value="CAN">Canada</option>
+<option value="CHL">Chile</option>
+<option value="CHN">China</option>
+<option value="COL">Colombia</option>
+<option value="HRV">Croatia</option>
+<option value="CZE">Czechia</option>
+<option value="DNK">Denmark</option>
+<option value="EST">Estonia</option>
+<option value="FIN" selected>Finland</option>
+<option value="FRA">France</option>
+<option value="DEU">Germany</option>
+<option value="GRC">Greece</option>
+<option value="HUN">Hungary</option>
+<option value="ISL">Iceland</option>
+<option value="IND">India</option>
+<option value="IDN">Indonesia</option>
+<option value="IRL">Ireland</option>
+<option value="ISR">Israel</option>
+<option value="ITA">Italy</option>
+<option value="JPN">Japan</option>
+<option value="LVA">Latvia</option>
+<option value="LTU">Lithuania</option>
+<option value="LUX">Luxembourg</option>
+<option value="MYS">Malaysia</option>
+<option value="MEX">Mexico</option>
+<option value="NLD">Netherlands</option>
+<option value="NZL">New Zealand</option>
+<option value="NOR">Norway</option>
+<option value="PHL">Philippines</option>
+<option value="POL">Poland</option>
+<option value="PRT">Portugal</option>
+<option value="ROU">Romania</option>
+<option value="RUS">Russia</option>
+<option value="SAU">Saudi Arabia</option>
+<option value="SGP">Singapore</option>
+<option value="SVK">Slovakia</option>
+<option value="SVN">Slovenia</option>
+<option value="ZAF">South Africa</option>
+<option value="KOR">South Korea</option>
+<option value="ESP">Spain</option>
+<option value="SWE">Sweden</option>
+<option value="CHE">Switzerland</option>
+<option value="THA">Thailand</option>
+<option value="TUR">Türkiye</option>
+<option value="ARE">United Arab Emirates</option>
+<option value="GBR">United Kingdom</option>
+<option value="USA">United States</option>
+<option value="VNM">Vietnam</option>
+</select></div>
+      <div class="arrow">→</div>
+      <div class="control"><label>TO</label><select id="to">
+<option value="ARG">Argentina</option>
+<option value="AUS">Australia</option>
+<option value="AUT">Austria</option>
+<option value="BEL">Belgium</option>
+<option value="BRA">Brazil</option>
+<option value="BGR">Bulgaria</option>
+<option value="CAN">Canada</option>
+<option value="CHL">Chile</option>
+<option value="CHN">China</option>
+<option value="COL">Colombia</option>
+<option value="HRV">Croatia</option>
+<option value="CZE">Czechia</option>
+<option value="DNK">Denmark</option>
+<option value="EST">Estonia</option>
+<option value="FIN">Finland</option>
+<option value="FRA">France</option>
+<option value="DEU">Germany</option>
+<option value="GRC">Greece</option>
+<option value="HUN">Hungary</option>
+<option value="ISL">Iceland</option>
+<option value="IND">India</option>
+<option value="IDN">Indonesia</option>
+<option value="IRL">Ireland</option>
+<option value="ISR">Israel</option>
+<option value="ITA">Italy</option>
+<option value="JPN">Japan</option>
+<option value="LVA">Latvia</option>
+<option value="LTU">Lithuania</option>
+<option value="LUX">Luxembourg</option>
+<option value="MYS">Malaysia</option>
+<option value="MEX">Mexico</option>
+<option value="NLD">Netherlands</option>
+<option value="NZL">New Zealand</option>
+<option value="NOR">Norway</option>
+<option value="PHL">Philippines</option>
+<option value="POL">Poland</option>
+<option value="PRT">Portugal</option>
+<option value="ROU">Romania</option>
+<option value="RUS">Russia</option>
+<option value="SAU">Saudi Arabia</option>
+<option value="SGP">Singapore</option>
+<option value="SVK">Slovakia</option>
+<option value="SVN">Slovenia</option>
+<option value="ZAF">South Africa</option>
+<option value="KOR">South Korea</option>
+<option value="ESP" selected>Spain</option>
+<option value="SWE">Sweden</option>
+<option value="CHE">Switzerland</option>
+<option value="THA">Thailand</option>
+<option value="TUR">Türkiye</option>
+<option value="ARE">United Arab Emirates</option>
+<option value="GBR">United Kingdom</option>
+<option value="USA">United States</option>
+<option value="VNM">Vietnam</option>
+</select></div>
+    </div>
+
+    <div class="scenarios" id="scenarios">
+      <button class="scenario active" data-s="same">Same income & work</button>
+      <button class="scenario" data-s="local">Local income & work</button>
+      <button class="scenario" data-s="mixed">Mixed 50/50</button>
+      <button class="scenario" data-s="no_earned">Pension / capital / savings</button>
+    </div>
+    <div class="assumption" id="assumption"></div>
+<div id="jsFallback" style="margin-top:12px;padding:10px 12px;border:1px solid #d8dee1;border-radius:10px;background:#fff8e8;color:#6f5a21;font-size:12px;line-height:1.45">
+  If the country list opens but the result cards do not update, this HTML is being shown in a preview that blocks JavaScript. Open it in Safari/Chrome or host it as a normal web page.
+</div>
+
+
+    <div class="summary">
+      <strong id="pairTitle">Finland → Spain</strong>
+      <div class="sentence" id="summarySentence"></div>
+    </div>
+  </section>
+
+  <section class="grid">
+    <article class="card" id="moneyCard">
+      <div class="kicker">💰 Money</div>
+      <div class="value" id="moneyValue"></div>
+      <div class="subtitle" id="moneyText"></div>
+      <div class="badge" id="moneyBadge"></div>
+      <div class="details"><details><summary>Why this result?</summary><div class="why" id="moneyWhy"></div></details></div>
+    </article>
+
+    <article class="card" id="workCard">
+      <div class="kicker">🕒 Work time</div>
+      <div class="value" id="workValue"></div>
+      <div class="subtitle" id="workText"></div>
+      <div class="badge">Population benchmark</div>
+      <div class="details"><details><summary>Why this result?</summary><div class="why" id="workWhy"></div></details></div>
+    </article>
+
+    <article class="card">
+      <div class="kicker">🙂 Life satisfaction</div>
+      <div class="value" id="happyValue"></div>
+      <div class="subtitle" id="happyText"></div>
+      <div class="bar"><div class="fill" id="happyBar"></div></div>
+      <div class="badge">Migrant-adjusted estimate</div>
+      <div class="details"><details><summary>Why this result?</summary><div class="why" id="happyWhy"></div></details></div>
+    </article>
+
+    <article class="card">
+      <div class="kicker">❤️ Healthy life expectancy</div>
+      <div class="value" id="haleValue"></div>
+      <div class="subtitle" id="haleText"></div>
+      <div class="badge">Population benchmark</div>
+      <div class="details"><details><summary>Why this result?</summary><div class="why" id="haleWhy"></div></details></div>
+    </article>
+
+    <article class="card">
+      <div class="kicker">🏥 Healthcare spending</div>
+      <div class="value" id="healthValue"></div>
+      <div class="subtitle" id="healthText"></div>
+      <div class="badge">Direct spending proxy</div>
+      <div class="details"><details><summary>Why this result?</summary><div class="why" id="healthWhy"></div></details></div>
+    </article>
+
+    <article class="card">
+      <div class="kicker">📄 Administrative friction</div>
+      <div class="value" id="adminValue"></div>
+      <div class="subtitle" id="adminText"></div>
+      <div class="badge">Government-effectiveness proxy</div>
+      <div class="details"><details><summary>Why this result?</summary><div class="why" id="adminWhy"></div></details></div>
+    </article>
+  </section>
+
+  <div class="note">
+    Prototype methodology: latest available observation is used when fresh data are unavailable; source year is shown in the explanation. Country averages are deliberately rough. No family, occupation, age or migration-status questionnaire is used in this MVP.
+  </div>
+</div>
+
+<script>
+const D = {"FIN":{"iso3":"FIN","country":"Finland","gni_per_capita_ppp":65090.0,"gni_ppp_year":2024,"price_level_vs_us":0.829889247282812,"price_level_year":2024,"work_hours_weekly":29.1,"work_hours_year":2025,"happiness_score":7.764,"happiness_period":"2023-2025","hale_years":69.92942,"hale_year":2021,"oop_health_ppp_per_capita":906.78,"oop_health_ppp_year":2023,"oop_health_share_pct":14.09493542,"oop_health_year":2023,"government_effectiveness_wgi":1.8127979,"wgi_year":2024,"local_earnings_ppp_monthly":6252.794,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"SWE":{"iso3":"SWE","country":"Sweden","gni_per_capita_ppp":74660.0,"gni_ppp_year":2024,"price_level_vs_us":0.812654660599574,"price_level_year":2024,"work_hours_weekly":29.2,"work_hours_year":2025,"happiness_score":7.255,"happiness_period":"2023-2025","hale_years":71.11832,"hale_year":2021,"oop_health_ppp_per_capita":1039.79,"oop_health_ppp_year":2024,"oop_health_share_pct":13.3813858,"oop_health_year":2024,"government_effectiveness_wgi":1.7700629,"wgi_year":2024,"local_earnings_ppp_monthly":4600.009,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"NOR":{"iso3":"NOR","country":"Norway","gni_per_capita_ppp":108950.0,"gni_ppp_year":2024,"price_level_vs_us":0.859233501357118,"price_level_year":2024,"work_hours_weekly":26.59,"work_hours_year":2025,"happiness_score":7.242,"happiness_period":"2023-2025","hale_years":71.15531,"hale_year":2021,"oop_health_ppp_per_capita":1303.48,"oop_health_ppp_year":2023,"oop_health_share_pct":13.68724823,"oop_health_year":2023,"government_effectiveness_wgi":1.8445185,"wgi_year":2024,"local_earnings_ppp_monthly":5903.447,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"DNK":{"iso3":"DNK","country":"Denmark","gni_per_capita_ppp":83530.0,"gni_ppp_year":2024,"price_level_vs_us":0.903633300822227,"price_level_year":2024,"work_hours_weekly":28.91,"work_hours_year":2025,"happiness_score":7.539,"happiness_period":"2023-2025","hale_years":70.05689,"hale_year":2021,"oop_health_ppp_per_capita":1007.08,"oop_health_ppp_year":2024,"oop_health_share_pct":13.86858845,"oop_health_year":2024,"government_effectiveness_wgi":1.8900128,"wgi_year":2024,"local_earnings_ppp_monthly":5604.801,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"ISL":{"iso3":"ISL","country":"Iceland","gni_per_capita_ppp":82820.0,"gni_ppp_year":2024,"price_level_vs_us":1.05680001555754,"price_level_year":2024,"work_hours_weekly":32.38,"work_hours_year":2025,"happiness_score":7.54,"happiness_period":"2023-2025","hale_years":71.37049,"hale_year":2021,"oop_health_ppp_per_capita":1030.71,"oop_health_ppp_year":2024,"oop_health_share_pct":14.87985802,"oop_health_year":2024,"government_effectiveness_wgi":1.5738606,"wgi_year":2024,"local_earnings_ppp_monthly":4463.261,"earnings_year":2020,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"GBR":{"iso3":"GBR","country":"United Kingdom","gni_per_capita_ppp":62220.0,"gni_ppp_year":2024,"price_level_vs_us":0.868301814037804,"price_level_year":2024,"work_hours_weekly":31.17,"work_hours_year":2025,"happiness_score":6.694,"happiness_period":"2023-2025","hale_years":68.63631,"hale_year":2021,"oop_health_ppp_per_capita":961.49,"oop_health_ppp_year":2023,"oop_health_share_pct":14.55540943,"oop_health_year":2024,"government_effectiveness_wgi":1.1998653,"wgi_year":2024,"local_earnings_ppp_monthly":3215.054,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"IRL":{"iso3":"IRL","country":"Ireland","gni_per_capita_ppp":105770.0,"gni_ppp_year":2024,"price_level_vs_us":0.81811511254375,"price_level_year":2024,"work_hours_weekly":30.45,"work_hours_year":2025,"happiness_score":6.928,"happiness_period":"2023-2025","hale_years":70.00318,"hale_year":2021,"oop_health_ppp_per_capita":930.5,"oop_health_ppp_year":2024,"oop_health_share_pct":10.60706902,"oop_health_year":2024,"government_effectiveness_wgi":1.6104571,"wgi_year":2024,"local_earnings_ppp_monthly":5448.459,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"NLD":{"iso3":"NLD","country":"Netherlands","gni_per_capita_ppp":84460.0,"gni_ppp_year":2024,"price_level_vs_us":0.810021071398437,"price_level_year":2024,"work_hours_weekly":26.57,"work_hours_year":2025,"happiness_score":7.223,"happiness_period":"2023-2025","hale_years":69.9687,"hale_year":2021,"oop_health_ppp_per_capita":965.95,"oop_health_ppp_year":2024,"oop_health_share_pct":11.78772259,"oop_health_year":2024,"government_effectiveness_wgi":1.7699612,"wgi_year":2024,"local_earnings_ppp_monthly":7255.122,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"BEL":{"iso3":"BEL","country":"Belgium","gni_per_capita_ppp":75480.0,"gni_ppp_year":2024,"price_level_vs_us":0.77578970669375,"price_level_year":2024,"work_hours_weekly":31.43,"work_hours_year":2025,"happiness_score":6.926,"happiness_period":"2023-2025","hale_years":69.79468,"hale_year":2021,"oop_health_ppp_per_capita":1610.94,"oop_health_ppp_year":2023,"oop_health_share_pct":21.50983047,"oop_health_year":2023,"government_effectiveness_wgi":1.2811307,"wgi_year":2024,"local_earnings_ppp_monthly":8297.119,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"LUX":{"iso3":"LUX","country":"Luxembourg","gni_per_capita_ppp":102080.0,"gni_ppp_year":2024,"price_level_vs_us":0.912080890557812,"price_level_year":2024,"work_hours_weekly":32.14,"work_hours_year":2025,"happiness_score":7.063,"happiness_period":"2023-2025","hale_years":71.23441,"hale_year":2021,"oop_health_ppp_per_capita":749.05,"oop_health_ppp_year":2024,"oop_health_share_pct":8.50457287,"oop_health_year":2024,"government_effectiveness_wgi":1.9495119,"wgi_year":2024,"local_earnings_ppp_monthly":9306.956,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"FRA":{"iso3":"FRA","country":"France","gni_per_capita_ppp":63730.0,"gni_ppp_year":2024,"price_level_vs_us":0.752596458009375,"price_level_year":2024,"work_hours_weekly":30.87,"work_hours_year":2025,"happiness_score":6.586,"happiness_period":"2023-2025","hale_years":70.08346,"hale_year":2021,"oop_health_ppp_per_capita":633.76,"oop_health_ppp_year":2024,"oop_health_share_pct":9.22742558,"oop_health_year":2024,"government_effectiveness_wgi":1.2039741,"wgi_year":2024,"local_earnings_ppp_monthly":5992.803,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"DEU":{"iso3":"DEU","country":"Germany","gni_per_capita_ppp":76500.0,"gni_ppp_year":2024,"price_level_vs_us":0.771785981339844,"price_level_year":2024,"work_hours_weekly":29.66,"work_hours_year":2025,"happiness_score":6.882,"happiness_period":"2023-2025","hale_years":68.93389,"hale_year":2021,"oop_health_ppp_per_capita":944.93,"oop_health_ppp_year":2024,"oop_health_share_pct":10.7067318,"oop_health_year":2024,"government_effectiveness_wgi":1.506231,"wgi_year":2024,"local_earnings_ppp_monthly":6138.439,"earnings_year":2022,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"CHE":{"iso3":"CHE","country":"Switzerland","gni_per_capita_ppp":94430.0,"gni_ppp_year":2024,"price_level_vs_us":1.10500213434747,"price_level_year":2024,"work_hours_weekly":34.61,"work_hours_year":2025,"happiness_score":7.018,"happiness_period":"2023-2025","hale_years":71.14916,"hale_year":2021,"oop_health_ppp_per_capita":2335.33,"oop_health_ppp_year":2023,"oop_health_share_pct":22.02737427,"oop_health_year":2023,"government_effectiveness_wgi":1.8805362,"wgi_year":2024,"local_earnings_ppp_monthly":4881.024,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"AUT":{"iso3":"AUT","country":"Austria","gni_per_capita_ppp":75630.0,"gni_ppp_year":2024,"price_level_vs_us":0.793561311610156,"price_level_year":2024,"work_hours_weekly":29.15,"work_hours_year":2025,"happiness_score":6.845,"happiness_period":"2023-2025","hale_years":69.78945,"hale_year":2021,"oop_health_ppp_per_capita":1358.36,"oop_health_ppp_year":2024,"oop_health_share_pct":16.46478271,"oop_health_year":2024,"government_effectiveness_wgi":1.5035898,"wgi_year":2024,"local_earnings_ppp_monthly":6832.273,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"ESP":{"iso3":"ESP","country":"Spain","gni_per_capita_ppp":57920.0,"gni_ppp_year":2024,"price_level_vs_us":0.62004814580625,"price_level_year":2024,"work_hours_weekly":31.95,"work_hours_year":2025,"happiness_score":6.54,"happiness_period":"2023-2025","hale_years":71.10702,"hale_year":2021,"oop_health_ppp_per_capita":1029.2,"oop_health_ppp_year":2023,"oop_health_share_pct":20.85539818,"oop_health_year":2023,"government_effectiveness_wgi":1.1631098,"wgi_year":2024,"local_earnings_ppp_monthly":5164.038,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"PRT":{"iso3":"PRT","country":"Portugal","gni_per_capita_ppp":51540.0,"gni_ppp_year":2024,"price_level_vs_us":0.569862492992187,"price_level_year":2024,"work_hours_weekly":33.46,"work_hours_year":2025,"happiness_score":6.029,"happiness_period":"2023-2025","hale_years":69.51927,"hale_year":2021,"oop_health_ppp_per_capita":1389.38,"oop_health_ppp_year":2024,"oop_health_share_pct":28.19350624,"oop_health_year":2024,"government_effectiveness_wgi":0.9763875,"wgi_year":2024,"local_earnings_ppp_monthly":2076.829,"earnings_year":2025,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"ITA":{"iso3":"ITA","country":"Italy","gni_per_capita_ppp":62160.0,"gni_ppp_year":2024,"price_level_vs_us":0.661101754605469,"price_level_year":2024,"work_hours_weekly":33.9,"work_hours_year":2025,"happiness_score":6.574,"happiness_period":"2023-2025","hale_years":70.56466,"hale_year":2021,"oop_health_ppp_per_capita":1113.88,"oop_health_ppp_year":2024,"oop_health_share_pct":22.30979538,"oop_health_year":2024,"government_effectiveness_wgi":0.8357122,"wgi_year":2024,"local_earnings_ppp_monthly":5326.467,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"GRC":{"iso3":"GRC","country":"Greece","gni_per_capita_ppp":42910.0,"gni_ppp_year":2024,"price_level_vs_us":0.56159960049375,"price_level_year":2024,"work_hours_weekly":38.27,"work_hours_year":2025,"happiness_score":5.697,"happiness_period":"2023-2025","hale_years":68.55282,"hale_year":2021,"oop_health_ppp_per_capita":1184.79,"oop_health_ppp_year":2023,"oop_health_share_pct":34.30307007,"oop_health_year":2023,"government_effectiveness_wgi":0.2623472,"wgi_year":2024,"local_earnings_ppp_monthly":3545.884,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"POL":{"iso3":"POL","country":"Poland","gni_per_capita_ppp":49540.0,"gni_ppp_year":2024,"price_level_vs_us":0.496697760214511,"price_level_year":2024,"work_hours_weekly":36.32,"work_hours_year":2025,"happiness_score":6.768,"happiness_period":"2023-2025","hale_years":65.52082,"hale_year":2021,"oop_health_ppp_per_capita":638.32,"oop_health_ppp_year":2024,"oop_health_share_pct":16.20527458,"oop_health_year":2024,"government_effectiveness_wgi":0.7176923,"wgi_year":2024,"local_earnings_ppp_monthly":3082.053,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"CZE":{"iso3":"CZE","country":"Czechia","gni_per_capita_ppp":55770.0,"gni_ppp_year":2024,"price_level_vs_us":0.558159711703434,"price_level_year":2024,"work_hours_weekly":34.49,"work_hours_year":2025,"happiness_score":6.821,"happiness_period":"2023-2025","hale_years":66.65716,"hale_year":2021,"oop_health_ppp_per_capita":657.35,"oop_health_ppp_year":2024,"oop_health_share_pct":14.06390572,"oop_health_year":2024,"government_effectiveness_wgi":1.1359816,"wgi_year":2024,"local_earnings_ppp_monthly":3560.779,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"SVK":{"iso3":"SVK","country":"Slovakia","gni_per_capita_ppp":46290.0,"gni_ppp_year":2024,"price_level_vs_us":0.554205859511719,"price_level_year":2024,"work_hours_weekly":33.88,"work_hours_year":2025,"happiness_score":6.255,"happiness_period":"2023-2025","hale_years":64.94128,"hale_year":2021,"oop_health_ppp_per_capita":650.99,"oop_health_ppp_year":2023,"oop_health_share_pct":20.15309143,"oop_health_year":2023,"government_effectiveness_wgi":0.6351198,"wgi_year":2024,"local_earnings_ppp_monthly":2450.738,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"HUN":{"iso3":"HUN","country":"Hungary","gni_per_capita_ppp":47600.0,"gni_ppp_year":2024,"price_level_vs_us":0.489352640778071,"price_level_year":2024,"work_hours_weekly":34.84,"work_hours_year":2025,"happiness_score":5.937,"happiness_period":"2023-2025","hale_years":64.83879,"hale_year":2021,"oop_health_ppp_per_capita":663.02,"oop_health_ppp_year":2023,"oop_health_share_pct":23.05996895,"oop_health_year":2023,"government_effectiveness_wgi":0.4834186,"wgi_year":2024,"local_earnings_ppp_monthly":1972.608,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"SVN":{"iso3":"SVN","country":"Slovenia","gni_per_capita_ppp":56960.0,"gni_ppp_year":2024,"price_level_vs_us":0.60302446579375,"price_level_year":2024,"work_hours_weekly":33.3,"work_hours_year":2025,"happiness_score":6.868,"happiness_period":"2023-2025","hale_years":69.35554,"hale_year":2021,"oop_health_ppp_per_capita":637.15,"oop_health_ppp_year":2024,"oop_health_share_pct":11.7449913,"oop_health_year":2024,"government_effectiveness_wgi":1.1133019,"wgi_year":2024,"local_earnings_ppp_monthly":5290.62,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"EST":{"iso3":"EST","country":"Estonia","gni_per_capita_ppp":49380.0,"gni_ppp_year":2024,"price_level_vs_us":0.631820115784375,"price_level_year":2024,"work_hours_weekly":31.6,"work_hours_year":2025,"happiness_score":6.41,"happiness_period":"2023-2025","hale_years":66.74033,"hale_year":2021,"oop_health_ppp_per_capita":799.86,"oop_health_ppp_year":2024,"oop_health_share_pct":21.38176537,"oop_health_year":2024,"government_effectiveness_wgi":1.3245612,"wgi_year":2024,"local_earnings_ppp_monthly":4064.927,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"LVA":{"iso3":"LVA","country":"Latvia","gni_per_capita_ppp":42650.0,"gni_ppp_year":2024,"price_level_vs_us":0.532692465314844,"price_level_year":2024,"work_hours_weekly":34.99,"work_hours_year":2025,"happiness_score":6.365,"happiness_period":"2023-2025","hale_years":63.76267,"hale_year":2021,"oop_health_ppp_per_capita":1063.6,"oop_health_ppp_year":2023,"oop_health_share_pct":35.05759811,"oop_health_year":2023,"government_effectiveness_wgi":0.7933559,"wgi_year":2024,"local_earnings_ppp_monthly":4010.517,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"LTU":{"iso3":"LTU","country":"Lithuania","gni_per_capita_ppp":54330.0,"gni_ppp_year":2024,"price_level_vs_us":0.540050487741406,"price_level_year":2024,"work_hours_weekly":35.36,"work_hours_year":2025,"happiness_score":6.704,"happiness_period":"2023-2025","hale_years":64.22813,"hale_year":2021,"oop_health_ppp_per_capita":1297.05,"oop_health_ppp_year":2024,"oop_health_share_pct":31.42526817,"oop_health_year":2024,"government_effectiveness_wgi":1.0621659,"wgi_year":2024,"local_earnings_ppp_monthly":4001.18,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"ROU":{"iso3":"ROU","country":"Romania","gni_per_capita_ppp":47920.0,"gni_ppp_year":2024,"price_level_vs_us":0.412059587107618,"price_level_year":2024,"work_hours_weekly":38.48,"work_hours_year":2025,"happiness_score":6.629,"happiness_period":"2023-2025","hale_years":63.84713,"hale_year":2021,"oop_health_ppp_per_capita":600.23,"oop_health_ppp_year":2023,"oop_health_share_pct":22.96146011,"oop_health_year":2023,"government_effectiveness_wgi":0.4004153,"wgi_year":2024,"local_earnings_ppp_monthly":2940.43,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"BGR":{"iso3":"BGR","country":"Bulgaria","gni_per_capita_ppp":39850.0,"gni_ppp_year":2024,"price_level_vs_us":0.4238008767789,"price_level_year":2024,"work_hours_weekly":37.6,"work_hours_year":2025,"happiness_score":5.703,"happiness_period":"2023-2025","hale_years":62.38891,"hale_year":2021,"oop_health_ppp_per_capita":1054.32,"oop_health_ppp_year":2023,"oop_health_share_pct":35.50430679,"oop_health_year":2023,"government_effectiveness_wgi":0.1208795,"wgi_year":2024,"local_earnings_ppp_monthly":2661.49,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"HRV":{"iso3":"HRV","country":"Croatia","gni_per_capita_ppp":49700.0,"gni_ppp_year":2024,"price_level_vs_us":0.492665780574879,"price_level_year":2024,"work_hours_weekly":33.87,"work_hours_year":2025,"happiness_score":6.009,"happiness_period":"2023-2025","hale_years":66.80262,"hale_year":2021,"oop_health_ppp_per_capita":302.83,"oop_health_ppp_year":2023,"oop_health_share_pct":9.37740326,"oop_health_year":2023,"government_effectiveness_wgi":0.7392971,"wgi_year":2024,"local_earnings_ppp_monthly":3963.921,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"RUS":{"iso3":"RUS","country":"Russia","gni_per_capita_ppp":47090.0,"gni_ppp_year":2024,"price_level_vs_us":0.314081420115992,"price_level_year":2024,"work_hours_weekly":38.19,"work_hours_year":2025,"happiness_score":5.834,"happiness_period":"2023-2025","hale_years":60.93956,"hale_year":2021,"oop_health_ppp_per_capita":909.7,"oop_health_ppp_year":2023,"oop_health_share_pct":28.39422226,"oop_health_year":2023,"government_effectiveness_wgi":-0.3647474,"wgi_year":2024,"local_earnings_ppp_monthly":2222.435,"earnings_year":2021,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"USA":{"iso3":"USA","country":"United States","gni_per_capita_ppp":85270.0,"gni_ppp_year":2024,"price_level_vs_us":1.0,"price_level_year":2024,"work_hours_weekly":36.27,"work_hours_year":2025,"happiness_score":6.816,"happiness_period":"2023-2025","hale_years":63.91496,"hale_year":2021,"oop_health_ppp_per_capita":1472.25,"oop_health_ppp_year":2023,"oop_health_share_pct":10.92723846,"oop_health_year":2023,"government_effectiveness_wgi":1.3020638,"wgi_year":2024,"local_earnings_ppp_monthly":6272.925,"earnings_year":2025,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"CAN":{"iso3":"CAN","country":"Canada","gni_per_capita_ppp":64460.0,"gni_ppp_year":2024,"price_level_vs_us":0.829209407315147,"price_level_year":2024,"work_hours_weekly":31.86,"work_hours_year":2025,"happiness_score":6.741,"happiness_period":"2023-2025","hale_years":69.7836,"hale_year":2021,"oop_health_ppp_per_capita":1168.09,"oop_health_ppp_year":2024,"oop_health_share_pct":15.27733707,"oop_health_year":2024,"government_effectiveness_wgi":1.7381193,"wgi_year":2024,"local_earnings_ppp_monthly":4746.954,"earnings_year":2025,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"MEX":{"iso3":"MEX","country":"Mexico","gni_per_capita_ppp":25100.0,"gni_ppp_year":2024,"price_level_vs_us":0.551148061350708,"price_level_year":2024,"work_hours_weekly":41.07,"work_hours_year":2025,"happiness_score":6.972,"happiness_period":"2023-2025","hale_years":61.43518,"hale_year":2021,"oop_health_ppp_per_capita":564.1,"oop_health_ppp_year":2023,"oop_health_share_pct":41.23572922,"oop_health_year":2023,"government_effectiveness_wgi":-0.1853724,"wgi_year":2024,"local_earnings_ppp_monthly":914.563,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"AUS":{"iso3":"AUS","country":"Australia","gni_per_capita_ppp":69600.0,"gni_ppp_year":2024,"price_level_vs_us":0.904685699150737,"price_level_year":2024,"work_hours_weekly":31.29,"work_hours_year":2025,"happiness_score":6.916,"happiness_period":"2023-2025","hale_years":70.60636,"hale_year":2021,"oop_health_ppp_per_capita":1218.92,"oop_health_ppp_year":2023,"oop_health_share_pct":15.84897614,"oop_health_year":2023,"government_effectiveness_wgi":1.7151337,"wgi_year":2024,"local_earnings_ppp_monthly":3925.805,"earnings_year":2021,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"NZL":{"iso3":"NZL","country":"New Zealand","gni_per_capita_ppp":54270.0,"gni_ppp_year":2024,"price_level_vs_us":0.884804591556259,"price_level_year":2024,"work_hours_weekly":33.48,"work_hours_year":2025,"happiness_score":6.995,"happiness_period":"2023-2025","hale_years":69.98322,"hale_year":2021,"oop_health_ppp_per_capita":707.43,"oop_health_ppp_year":2024,"oop_health_share_pct":12.68764019,"oop_health_year":2024,"government_effectiveness_wgi":1.8428164,"wgi_year":2024,"local_earnings_ppp_monthly":4064.155,"earnings_year":2022,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"BRA":{"iso3":"BRA","country":"Brazil","gni_per_capita_ppp":21620.0,"gni_ppp_year":2024,"price_level_vs_us":0.460310991307034,"price_level_year":2024,"work_hours_weekly":38.04,"work_hours_year":2025,"happiness_score":6.634,"happiness_period":"2023-2025","hale_years":61.82654,"hale_year":2021,"oop_health_ppp_per_capita":543.09,"oop_health_ppp_year":2023,"oop_health_share_pct":26.23070717,"oop_health_year":2023,"government_effectiveness_wgi":-0.1860013,"wgi_year":2024,"local_earnings_ppp_monthly":1249.69,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"ARG":{"iso3":"ARG","country":"Argentina","gni_per_capita_ppp":29850.0,"gni_ppp_year":2024,"price_level_vs_us":0.459252952324262,"price_level_year":2024,"work_hours_weekly":34.91,"work_hours_year":2025,"happiness_score":6.43,"happiness_period":"2023-2025","hale_years":64.79436,"hale_year":2021,"oop_health_ppp_per_capita":755.94,"oop_health_ppp_year":2023,"oop_health_share_pct":24.46961784,"oop_health_year":2023,"government_effectiveness_wgi":0.194177,"wgi_year":2024,"local_earnings_ppp_monthly":1239.126,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"CHL":{"iso3":"CHL","country":"Chile","gni_per_capita_ppp":34390.0,"gni_ppp_year":2024,"price_level_vs_us":0.482427260913473,"price_level_year":2024,"work_hours_weekly":36.38,"work_hours_year":2025,"happiness_score":6.302,"happiness_period":"2023-2025","hale_years":67.6523,"hale_year":2021,"oop_health_ppp_per_capita":1413.98,"oop_health_ppp_year":2024,"oop_health_share_pct":39.14786911,"oop_health_year":2024,"government_effectiveness_wgi":1.0140437,"wgi_year":2024,"local_earnings_ppp_monthly":2078.786,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"COL":{"iso3":"COL","country":"Colombia","gni_per_capita_ppp":22100.0,"gni_ppp_year":2024,"price_level_vs_us":0.368184935505917,"price_level_year":2024,"work_hours_weekly":42.34,"work_hours_year":2025,"happiness_score":6.04,"happiness_period":"2023-2025","hale_years":65.02156,"hale_year":2021,"oop_health_ppp_per_capita":259.06,"oop_health_ppp_year":2024,"oop_health_share_pct":14.73741817,"oop_health_year":2024,"government_effectiveness_wgi":-0.0380875,"wgi_year":2024,"local_earnings_ppp_monthly":1125.975,"earnings_year":2025,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"JPN":{"iso3":"JPN","country":"Japan","gni_per_capita_ppp":57450.0,"gni_ppp_year":2024,"price_level_vs_us":0.628342229841439,"price_level_year":2024,"work_hours_weekly":31.1,"work_hours_year":2025,"happiness_score":6.13,"happiness_period":"2023-2025","hale_years":73.39518,"hale_year":2021,"oop_health_ppp_per_capita":656.45,"oop_health_ppp_year":2023,"oop_health_share_pct":12.23568153,"oop_health_year":2023,"government_effectiveness_wgi":2.0681175,"wgi_year":2024,"local_earnings_ppp_monthly":2808.732,"earnings_year":2021,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"KOR":{"iso3":"KOR","country":"South Korea","gni_per_capita_ppp":61930.0,"gni_ppp_year":2024,"price_level_vs_us":0.615309303016412,"price_level_year":2024,"work_hours_weekly":37.29,"work_hours_year":2025,"happiness_score":6.04,"happiness_period":"2023-2025","hale_years":72.45059,"hale_year":2021,"oop_health_ppp_per_capita":1714.37,"oop_health_ppp_year":2024,"oop_health_share_pct":33.73815536,"oop_health_year":2024,"government_effectiveness_wgi":1.400505,"wgi_year":2024,"local_earnings_ppp_monthly":4525.448,"earnings_year":2022,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"ISR":{"iso3":"ISR","country":"Israel","gni_per_capita_ppp":56960.0,"gni_ppp_year":2024,"price_level_vs_us":0.972813169852793,"price_level_year":2024,"work_hours_weekly":34.96,"work_hours_year":2025,"happiness_score":7.187,"happiness_period":"2023-2025","hale_years":70.75753,"hale_year":2021,"oop_health_ppp_per_capita":826.24,"oop_health_ppp_year":2023,"oop_health_share_pct":20.48583984,"oop_health_year":2023,"government_effectiveness_wgi":1.2820002,"wgi_year":2024,"local_earnings_ppp_monthly":2699.581,"earnings_year":2021,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"TUR":{"iso3":"TUR","country":"Türkiye","gni_per_capita_ppp":44510.0,"gni_ppp_year":2024,"price_level_vs_us":0.352209284916059,"price_level_year":2024,"work_hours_weekly":42.74,"work_hours_year":2025,"happiness_score":5.3,"happiness_period":"2023-2025","hale_years":65.20501,"hale_year":2021,"oop_health_ppp_per_capita":336.99,"oop_health_ppp_year":2023,"oop_health_share_pct":19.04723167,"oop_health_year":2023,"government_effectiveness_wgi":-0.0527008,"wgi_year":2024,"local_earnings_ppp_monthly":2214.414,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"CHN":{"iso3":"CHN","country":"China","gni_per_capita_ppp":26950.0,"gni_ppp_year":2024,"price_level_vs_us":0.490802871328148,"price_level_year":2024,"work_hours_weekly":44.56,"work_hours_year":2025,"happiness_score":6.074,"happiness_period":"2023-2025","hale_years":68.58452,"hale_year":2021,"oop_health_ppp_per_capita":478.38,"oop_health_ppp_year":2023,"oop_health_share_pct":32.17354584,"oop_health_year":2023,"government_effectiveness_wgi":0.7040988,"wgi_year":2024,"local_earnings_ppp_monthly":1434.75,"earnings_year":2022,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"IND":{"iso3":"IND","country":"India","gni_per_capita_ppp":10580.0,"gni_ppp_year":2024,"price_level_vs_us":0.241660782871889,"price_level_year":2024,"work_hours_weekly":45.71,"work_hours_year":2025,"happiness_score":4.536,"happiness_period":"2023-2025","hale_years":58.14675,"hale_year":2021,"oop_health_ppp_per_capita":151.95,"oop_health_ppp_year":2023,"oop_health_share_pct":43.88510513,"oop_health_year":2023,"government_effectiveness_wgi":0.5080583,"wgi_year":2024,"local_earnings_ppp_monthly":1045.971,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"SGP":{"iso3":"SGP","country":"Singapore","gni_per_capita_ppp":126630.0,"gni_ppp_year":2024,"price_level_vs_us":0.60172862740966,"price_level_year":2024,"work_hours_weekly":44.63,"work_hours_year":2025,"happiness_score":6.585,"happiness_period":"2023-2025","hale_years":73.64695,"hale_year":2021,"oop_health_ppp_per_capita":1665.23,"oop_health_ppp_year":2023,"oop_health_share_pct":25.41850281,"oop_health_year":2023,"government_effectiveness_wgi":2.1107584,"wgi_year":2024,"local_earnings_ppp_monthly":4419.631,"earnings_year":2021,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"ARE":{"iso3":"ARE","country":"United Arab Emirates","gni_per_capita_ppp":81640.0,"gni_ppp_year":2024,"price_level_vs_us":0.633379476186693,"price_level_year":2024,"work_hours_weekly":48.29,"work_hours_year":2025,"happiness_score":6.821,"happiness_period":"2023-2025","hale_years":67.2737,"hale_year":2021,"oop_health_ppp_per_capita":360.27,"oop_health_ppp_year":2023,"oop_health_share_pct":9.66616821,"oop_health_year":2023,"government_effectiveness_wgi":1.1338161,"wgi_year":2024,"local_earnings_ppp_monthly":3017.269,"earnings_year":2009,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"SAU":{"iso3":"SAU","country":"Saudi Arabia","gni_per_capita_ppp":72440.0,"gni_ppp_year":2024,"price_level_vs_us":0.492076597806555,"price_level_year":2024,"work_hours_weekly":40.77,"work_hours_year":2025,"happiness_score":6.817,"happiness_period":"2023-2025","hale_years":65.64451,"hale_year":2021,"oop_health_ppp_per_capita":490.54,"oop_health_ppp_year":2023,"oop_health_share_pct":14.11603928,"oop_health_year":2023,"government_effectiveness_wgi":0.6467366,"wgi_year":2024,"local_earnings_ppp_monthly":3480.078,"earnings_year":2022,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"MYS":{"iso3":"MYS","country":"Malaysia","gni_per_capita_ppp":37510.0,"gni_ppp_year":2024,"price_level_vs_us":0.306418345407754,"price_level_year":2024,"work_hours_weekly":44.49,"work_hours_year":2025,"happiness_score":6.005,"happiness_period":"2023-2025","hale_years":63.94692,"hale_year":2021,"oop_health_ppp_per_capita":534.6,"oop_health_ppp_year":2023,"oop_health_share_pct":37.09352112,"oop_health_year":2023,"government_effectiveness_wgi":0.8742048,"wgi_year":2024,"local_earnings_ppp_monthly":1865.889,"earnings_year":2020,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"THA":{"iso3":"THA","country":"Thailand","gni_per_capita_ppp":24110.0,"gni_ppp_year":2024,"price_level_vs_us":0.297274695387904,"price_level_year":2024,"work_hours_weekly":42.13,"work_hours_year":2025,"happiness_score":6.296,"happiness_period":"2023-2025","hale_years":65.75673,"hale_year":2021,"oop_health_ppp_per_capita":105.97,"oop_health_ppp_year":2023,"oop_health_share_pct":9.93404865,"oop_health_year":2023,"government_effectiveness_wgi":0.2066998,"wgi_year":2024,"local_earnings_ppp_monthly":1509.198,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"IDN":{"iso3":"IDN","country":"Indonesia","gni_per_capita_ppp":16050.0,"gni_ppp_year":2024,"price_level_vs_us":0.299449658545769,"price_level_year":2024,"work_hours_weekly":37.59,"work_hours_year":2025,"happiness_score":5.617,"happiness_period":"2023-2025","hale_years":60.66925,"hale_year":2021,"oop_health_ppp_per_capita":129.49,"oop_health_ppp_year":2023,"oop_health_share_pct":31.0836544,"oop_health_year":2023,"government_effectiveness_wgi":0.2652297,"wgi_year":2024,"local_earnings_ppp_monthly":539.882,"earnings_year":2023,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"VNM":{"iso3":"VNM","country":"Vietnam","gni_per_capita_ppp":15850.0,"gni_ppp_year":2024,"price_level_vs_us":0.287894077064099,"price_level_year":2024,"work_hours_weekly":41.76,"work_hours_year":2025,"happiness_score":6.428,"happiness_period":"2023-2025","hale_years":65.35112,"hale_year":2021,"oop_health_ppp_per_capita":270.32,"oop_health_ppp_year":2023,"oop_health_share_pct":39.20284653,"oop_health_year":2023,"government_effectiveness_wgi":-0.1254421,"wgi_year":2024,"local_earnings_ppp_monthly":1198.144,"earnings_year":2024,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"PHL":{"iso3":"PHL","country":"Philippines","gni_per_capita_ppp":13350.0,"gni_ppp_year":2024,"price_level_vs_us":0.337865445630182,"price_level_year":2024,"work_hours_weekly":39.77,"work_hours_year":2025,"happiness_score":6.206,"happiness_period":"2023-2025","hale_years":58.7678,"hale_year":2021,"oop_health_ppp_per_capita":248.6,"oop_health_ppp_year":2023,"oop_health_share_pct":44.36006165,"oop_health_year":2023,"government_effectiveness_wgi":0.0798378,"wgi_year":2024,"local_earnings_ppp_monthly":850.866,"earnings_year":2023,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"},"ZAF":{"iso3":"ZAF","country":"South Africa","gni_per_capita_ppp":15170.0,"gni_ppp_year":2024,"price_level_vs_us":0.404552869052972,"price_level_year":2024,"work_hours_weekly":41.06,"work_hours_year":2025,"happiness_score":5.009,"happiness_period":"2023-2025","hale_years":52.75708,"hale_year":2021,"oop_health_ppp_per_capita":90.6,"oop_health_ppp_year":2023,"oop_health_share_pct":6.69263172,"oop_health_year":2023,"government_effectiveness_wgi":-0.1559159,"wgi_year":2024,"local_earnings_ppp_monthly":1076.012,"earnings_year":2020,"local_money_method":"World Bank GNI per capita PPP","ilo_earnings_role":"diagnostic_only_not_used_for_cross_country_money"}};
+const tau = 0.65;
+const fb = document.getElementById("jsFallback"); if (fb) fb.style.display = "none";
+let scenario = "same";
+const $ = s => document.querySelector(s);
+
+$("#from").value="FIN"; $("#to").value="ESP";
+
+function num(x){return Number(x)}
+function signed(x,d=1){return (x>=0?"+":"")+x.toFixed(d)}
+function pct(x,d=1){return signed(x*100,d)+"%"}
+function cls(x, betterPositive=true, eps=0.01){
+  if (Math.abs(x)<eps) return "mid";
+  const good = betterPositive ? x>0 : x<0;
+  return good ? "good":"bad";
+}
+function ratioDisplay(r){
+  if(r>=2) return "≈"+r.toFixed(1)+"×";
+  if(r<=0.5) return "≈"+r.toFixed(2)+"×";
+  return pct(r-1);
+}
+function magnitude(x, cuts=[.05,.15]){
+  x=Math.abs(x); return x<cuts[0]?"small":x<cuts[1]?"moderate":"strong";
+}
+function setVal(id,text,c){
+  const e=$("#"+id); e.textContent=text; e.className="value "+c;
+}
+
+function render(){
+  const A=D[$("#from").value], B=D[$("#to").value];
+  $("#pairTitle").textContent=A.country+" → "+B.country;
+
+  const priceRatio=num(A.price_level_vs_us)/num(B.price_level_vs_us);
+  const localRatio=num(B.gni_per_capita_ppp)/num(A.gni_per_capita_ppp);
+  let moneyRatio, workDelta;
+  if(scenario==="same"){moneyRatio=priceRatio;workDelta=0}
+  if(scenario==="local"){moneyRatio=localRatio;workDelta=num(B.work_hours_weekly)-num(A.work_hours_weekly)}
+  if(scenario==="mixed"){moneyRatio=.5*priceRatio+.5*localRatio;workDelta=.5*(num(B.work_hours_weekly)-num(A.work_hours_weekly))}
+  if(scenario==="no_earned"){moneyRatio=priceRatio;workDelta=null}
+
+  const moneyDelta=moneyRatio-1;
+  setVal("moneyValue",ratioDisplay(moneyRatio),cls(moneyDelta,true,.015));
+  $("#moneyBadge").textContent = scenario==="local" ? "Local income-level benchmark" :
+      scenario==="mixed" ? "50/50 model" : "Purchasing-power estimate";
+  if(scenario==="same"){
+    $("#moneyText").textContent="Estimated change in spending power if your spendable income stays roughly the same.";
+    $("#moneyWhy").innerHTML=`<b>Calculation:</b> price level ratio ${A.country} / ${B.country}. `+
+      `World Bank price-level proxy: ${A.price_level_vs_us.toFixed(3)} (${A.price_level_year}) vs ${B.price_level_vs_us.toFixed(3)} (${B.price_level_year}). `+
+      `<br><b>Does not mean:</b> that taxes or your actual household budget stay unchanged.`;
+  } else if(scenario==="local"){
+    $("#moneyText").textContent="Difference in broad local income level, adjusted for purchasing power.";
+    $("#moneyWhy").innerHTML=`<b>Calculation:</b> World Bank GNI per capita PPP in the destination divided by the source. `+
+      `${A.country}: ${Math.round(A.gni_per_capita_ppp).toLocaleString()}; ${B.country}: ${Math.round(B.gni_per_capita_ppp).toLocaleString()} (${B.gni_ppp_year}). `+
+      `<br><b>Does not mean:</b> your salary will change by this amount. It is a country-level income benchmark.`;
+  } else if(scenario==="mixed"){
+    $("#moneyText").textContent="A fixed 50/50 blend of portable income and local income conditions.";
+    $("#moneyWhy").innerHTML=`<b>Calculation:</b> 50% portable purchasing-power ratio + 50% local GNI-PPP ratio. `+
+      `<br><b>Model assumption:</b> 50/50 is deliberately simple and is not an empirical law.`;
+  } else {
+    $("#moneyText").textContent="Estimated purchasing-power change if your spendable pension, capital income or savings stay similar.";
+    $("#moneyWhy").innerHTML=`<b>Calculation:</b> same price-level comparison as portable income. `+
+      `<br><b>Does not mean:</b> pension or investment taxation is identical after moving.`;
+  }
+
+  // Work
+  if(workDelta===null){
+    $("#workCard").classList.add("hidden");
+  } else {
+    $("#workCard").classList.remove("hidden");
+    if(scenario==="same"){
+      setVal("workValue","No change","mid");
+      $("#workText").textContent="Your work arrangement is assumed to move with you.";
+    } else {
+      setVal("workValue",signed(workDelta,1)+" h/week",cls(workDelta,false,.25));
+      $("#workText").textContent= workDelta>0 ? "The destination's national work-time benchmark is higher." : "The destination's national work-time benchmark is lower.";
+    }
+    $("#workWhy").innerHTML=`ILO modelled average weekly actual hours: <b>${A.country} ${A.work_hours_weekly.toFixed(1)}</b> vs <b>${B.country} ${B.work_hours_weekly.toFixed(1)}</b> (${B.work_hours_year}). This is not your future schedule.`;
+  }
+
+  // Happiness normalized to 0-100
+  const hA=num(A.happiness_score), hB=num(B.happiness_score);
+  const hEst=hA + tau*(hB-hA);
+  const hA100=hA*10, hB100=hB*10, hEst100=hEst*10;
+  const hDelta100=hEst100-hA100;
+  setVal("happyValue",signed(hDelta100,1)+" pts",cls(hDelta100,true,.5));
+  $("#happyText").textContent=`Estimated life satisfaction: ${hEst100.toFixed(1)} / 100`;
+  $("#happyBar").style.width=Math.max(0,Math.min(100,hEst100))+"%";
+  $("#happyWhy").innerHTML=`WHR country averages are on a 0–10 ladder. For readability we multiply them by 10, so ${A.country} is <b>${hA100.toFixed(1)}/100</b> and ${B.country} is <b>${hB100.toFixed(1)}/100</b>. `+
+    `The migrant-adjusted estimate moves 65% of the country gap: <b>${hEst100.toFixed(1)}/100</b>, a change of <b>${signed(hDelta100,1)} points</b>. `+
+    `<br><b>Why points, not percent?</b> The life-evaluation scale is not a ratio scale, so “10% happier” would be misleading.`;
+
+  // HALE
+  const hd=num(B.hale_years)-num(A.hale_years);
+  setVal("haleValue",signed(hd,1)+" years",cls(hd,true,.2));
+  $("#haleText").textContent=hd>=0?"The destination has higher healthy life expectancy.":"The destination has lower healthy life expectancy.";
+  $("#haleWhy").innerHTML=`WHO HALE: <b>${A.country} ${A.hale_years.toFixed(1)}</b> vs <b>${B.country} ${B.hale_years.toFixed(1)}</b> years (${B.hale_year}). This is a population difference, not years added to or removed from your life.`;
+
+  // Healthcare
+  const hr=num(B.oop_health_ppp_per_capita)/num(A.oop_health_ppp_per_capita);
+  const hdPct=hr-1;
+  setVal("healthValue",ratioDisplay(hr),cls(hdPct,false,.05));
+  $("#healthText").textContent=hdPct>0?"Typical direct health spending per person is higher.":"Typical direct health spending per person is lower.";
+  $("#healthWhy").innerHTML=`WHO/World Bank out-of-pocket health spending, PPP: <b>${A.country} ${A.oop_health_ppp_per_capita.toFixed(0)}</b> vs <b>${B.country} ${B.oop_health_ppp_per_capita.toFixed(0)}</b> international dollars per person (${B.oop_health_ppp_year}). `+
+    `OOP share of total health spending is ${A.oop_health_share_pct.toFixed(1)}% vs ${B.oop_health_share_pct.toFixed(1)}%. This reflects utilization and health-system design as well as prices.`;
+
+  // Admin
+  const ad=num(B.government_effectiveness_wgi)-num(A.government_effectiveness_wgi);
+  const abs=Math.abs(ad);
+  let label = abs<.2 ? "Similar" : abs<.55 ? (ad>0?"Somewhat easier":"Somewhat harder") : (ad>0?"Noticeably easier":"Noticeably harder");
+  setVal("adminValue",label,cls(ad,true,.08));
+  $("#adminText").textContent="Broad public-administration environment, not a count of forms or waiting hours.";
+  $("#adminWhy").innerHTML=`World Bank Government Effectiveness: <b>${A.country} ${A.government_effectiveness_wgi.toFixed(2)}</b> vs <b>${B.country} ${B.government_effectiveness_wgi.toFixed(2)}</b> (${B.wgi_year}). `+
+    `This is only a proxy for administrative friction and does not model your citizenship, visa status or a specific immigration procedure.`;
+
+  // Assumption line
+  const scenarioText={
+    same:"Assumption: your spendable income and work arrangement remain roughly the same.",
+    local:"Assumption: you enter the destination's local economic and work environment.",
+    mixed:"Assumption: half of your economic life remains portable, half becomes local.",
+    no_earned:"Assumption: your spendable pension, capital income or savings remain roughly similar."
+  };
+  $("#assumption").textContent=scenarioText[scenario];
+
+  // Deterministic human summary
+  const ups=[], downs=[];
+  if(moneyDelta>.05) ups.push("purchasing power / income level");
+  if(moneyDelta<-.05) downs.push("purchasing power / income level");
+  if(hDelta100>3) ups.push("life satisfaction");
+  if(hDelta100<-3) downs.push("life satisfaction");
+  if(hd>.5) ups.push("population health");
+  if(hd<-.5) downs.push("population health");
+  if(ad>.2) ups.push("administration");
+  if(ad<-.2) downs.push("administration");
+  let sentence="";
+  if(ups.length&&downs.length) sentence=`The clearest upside is ${ups[0]}; the main trade-off is ${downs[0]}.`;
+  else if(ups.length) sentence=`This comparison leans positive, led by ${ups[0]}.`;
+  else if(downs.length) sentence=`This comparison leans negative, mainly because of ${downs[0]}.`;
+  else sentence="This move looks fairly balanced on the current country-level indicators.";
+  $("#summarySentence").textContent=sentence+" Open any card to see what the number really means.";
+}
+
+$("#from").addEventListener("change",render);
+$("#to").addEventListener("change",render);
+document.querySelectorAll(".scenario").forEach(btn=>btn.addEventListener("click",()=>{
+  scenario=btn.dataset.s;
+  document.querySelectorAll(".scenario").forEach(x=>x.classList.remove("active"));
+  btn.classList.add("active"); render();
+}));
+render();
+</script>
+</body>
+</html>
