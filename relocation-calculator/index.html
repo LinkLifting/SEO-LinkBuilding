@@ -30,7 +30,7 @@ select{width:100%;border:1px solid #cbd5d9;border-radius:12px;background:white;p
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;min-height:190px;box-shadow:0 6px 20px rgba(21,38,45,.035);display:flex;flex-direction:column}
 .card.hidden{display:none}
-.kicker{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.kicker{font-size:15px;font-weight:800;color:var(--ink);letter-spacing:-.01em}.metric-note{font-size:11.5px;color:var(--muted);margin-top:3px;line-height:1.35}
 .value{font-size:34px;font-weight:820;letter-spacing:-.04em;margin:8px 0 4px}
 .value.good{color:var(--good)} .value.bad{color:var(--bad)} .value.mid{color:var(--mid)}
 .subtitle{font-size:14px;line-height:1.45;color:#3d4a51;min-height:42px}
@@ -57,7 +57,7 @@ details[open] summary{margin-bottom:8px}
   <section class="hero">
     <div class="eyebrow">Mike's Balance prototype</div>
     <h1>Would you be better off in another country?</h1>
-    <p>A rough reality check for money, work, life satisfaction, health and bureaucracy. It compares country-level conditions, not your destiny.</p>
+    <p>See what changes when you move: money, work, happiness, healthy years, healthcare and bureaucracy. Country-level estimates, not a personal forecast.</p>
 
     <div class="controls">
       <div class="control"><label>FROM</label><select id="from">
@@ -193,9 +193,9 @@ details[open] summary{margin-bottom:8px}
     </div>
   </section>
 
-  <section class="grid">
+  <div class="card-intro" style="margin:18px 2px 0;color:var(--muted);font-size:12.5px;"><b style="color:var(--ink)">Big number = change after moving.</b> Small line = what the indicator actually measures.</div><section class="grid">
     <article class="card" id="moneyCard">
-      <div class="kicker">💰 Money</div>
+      <div class="kicker">💰 Money</div><div class="metric-note">Purchasing power / local income</div>
       <div class="value" id="moneyValue"></div>
       <div class="subtitle" id="moneyText"></div>
       <div class="badge" id="moneyBadge"></div>
@@ -203,7 +203,7 @@ details[open] summary{margin-bottom:8px}
     </article>
 
     <article class="card" id="workCard">
-      <div class="kicker">🕒 Work time</div>
+      <div class="kicker">🕒 Work</div><div class="metric-note">Typical weekly hours</div>
       <div class="value" id="workValue"></div>
       <div class="subtitle" id="workText"></div>
       <div class="badge">Population benchmark</div>
@@ -211,7 +211,7 @@ details[open] summary{margin-bottom:8px}
     </article>
 
     <article class="card">
-      <div class="kicker">🙂 Life evaluation change</div>
+      <div class="kicker">🙂 Happiness</div><div class="metric-note">Migrant-adjusted life evaluation</div>
       <div class="value" id="happyValue"></div>
       <div class="subtitle" id="happyText"></div>
       <div class="bar"><div class="fill" id="happyBar"></div></div>
@@ -220,7 +220,7 @@ details[open] summary{margin-bottom:8px}
     </article>
 
     <article class="card">
-      <div class="kicker">❤️ Healthy life expectancy</div>
+      <div class="kicker">❤️ Healthy years</div><div class="metric-note">Healthy life expectancy</div>
       <div class="value" id="haleValue"></div>
       <div class="subtitle" id="haleText"></div>
       <div class="badge">Population benchmark</div>
@@ -228,7 +228,7 @@ details[open] summary{margin-bottom:8px}
     </article>
 
     <article class="card">
-      <div class="kicker">🏥 Healthcare spending</div>
+      <div class="kicker">🏥 Healthcare costs</div><div class="metric-note">Out-of-pocket spending</div>
       <div class="value" id="healthValue"></div>
       <div class="subtitle" id="healthText"></div>
       <div class="badge">Direct spending proxy</div>
@@ -236,7 +236,7 @@ details[open] summary{margin-bottom:8px}
     </article>
 
     <article class="card">
-      <div class="kicker">📄 Administrative friction</div>
+      <div class="kicker">📄 Bureaucracy</div><div class="metric-note">Government effectiveness</div>
       <div class="value" id="adminValue"></div>
       <div class="subtitle" id="adminText"></div>
       <div class="badge">Government-effectiveness proxy</div>
@@ -295,21 +295,21 @@ function render(){
   $("#moneyBadge").textContent = scenario==="local" ? "Local income-level benchmark" :
       scenario==="mixed" ? "50/50 model" : "Purchasing-power estimate";
   if(scenario==="same"){
-    $("#moneyText").textContent="Estimated change in spending power if your spendable income stays roughly the same.";
+    $("#moneyText").textContent="How far the same income would go after the move.";
     $("#moneyWhy").innerHTML=`<b>Calculation:</b> price level ratio ${A.country} / ${B.country}. `+
       `World Bank price-level proxy: ${A.price_level_vs_us.toFixed(3)} (${A.price_level_year}) vs ${B.price_level_vs_us.toFixed(3)} (${B.price_level_year}). `+
       `<br><b>Does not mean:</b> that taxes or your actual household budget stay unchanged.`;
   } else if(scenario==="local"){
-    $("#moneyText").textContent="Difference in broad local income level, adjusted for purchasing power.";
+    $("#moneyText").textContent="How the destination compares on broad local income level.";
     $("#moneyWhy").innerHTML=`<b>Calculation:</b> World Bank GNI per capita PPP in the destination divided by the source. `+
       `${A.country}: ${Math.round(A.gni_per_capita_ppp).toLocaleString()}; ${B.country}: ${Math.round(B.gni_per_capita_ppp).toLocaleString()} (${B.gni_ppp_year}). `+
       `<br><b>Does not mean:</b> your salary will change by this amount. It is a country-level income benchmark.`;
   } else if(scenario==="mixed"){
-    $("#moneyText").textContent="A fixed 50/50 blend of portable income and local income conditions.";
+    $("#moneyText").textContent="Half portable income, half local economic conditions.";
     $("#moneyWhy").innerHTML=`<b>Calculation:</b> 50% portable purchasing-power ratio + 50% local GNI-PPP ratio. `+
       `<br><b>Model assumption:</b> 50/50 is deliberately simple and is not an empirical law.`;
   } else {
-    $("#moneyText").textContent="Estimated purchasing-power change if your spendable pension, capital income or savings stay similar.";
+    $("#moneyText").textContent="How far the same pension, capital income or savings would go.";
     $("#moneyWhy").innerHTML=`<b>Calculation:</b> same price-level comparison as portable income. `+
       `<br><b>Does not mean:</b> pension or investment taxation is identical after moving.`;
   }
@@ -321,10 +321,10 @@ function render(){
     $("#workCard").classList.remove("hidden");
     if(scenario==="same"){
       setVal("workValue","No change","mid");
-      $("#workText").textContent="Your work arrangement is assumed to move with you.";
+      $("#workText").textContent="No work-time change in this scenario.";
     } else {
       setVal("workValue",signed(workDelta,1)+" h/week",cls(workDelta,false,.25));
-      $("#workText").textContent= workDelta>0 ? "The destination's national work-time benchmark is higher." : "The destination's national work-time benchmark is lower.";
+      $("#workText").textContent= workDelta>0 ? "Typical weekly work time is higher." : "Typical weekly work time is lower.";
     }
     $("#workWhy").innerHTML=`ILO modelled average weekly actual hours: <b>${A.country} ${A.work_hours_weekly.toFixed(1)}</b> vs <b>${B.country} ${B.work_hours_weekly.toFixed(1)}</b> (${B.work_hours_year}). This is not your future schedule.`;
   }
@@ -347,14 +347,14 @@ function render(){
   // HALE
   const hd=num(B.hale_years)-num(A.hale_years);
   setVal("haleValue",signed(hd,1)+" years",cls(hd,true,.2));
-  $("#haleText").textContent=hd>=0?"The destination has higher healthy life expectancy.":"The destination has lower healthy life expectancy.";
+  $("#haleText").textContent=hd>=0?"More healthy years at the population level.":"Fewer healthy years at the population level.";
   $("#haleWhy").innerHTML=`WHO HALE: <b>${A.country} ${A.hale_years.toFixed(1)}</b> vs <b>${B.country} ${B.hale_years.toFixed(1)}</b> years (${B.hale_year}). This is a population difference, not years added to or removed from your life.`;
 
   // Healthcare
   const hr=num(B.oop_health_ppp_per_capita)/num(A.oop_health_ppp_per_capita);
   const hdPct=hr-1;
   setVal("healthValue",ratioDisplay(hr),cls(hdPct,false,.05));
-  $("#healthText").textContent=hdPct>0?"Typical direct health spending per person is higher.":"Typical direct health spending per person is lower.";
+  $("#healthText").textContent=hdPct>0?"Typical out-of-pocket healthcare spending is higher.":"Typical out-of-pocket healthcare spending is lower.";
   $("#healthWhy").innerHTML=`WHO/World Bank out-of-pocket health spending, PPP: <b>${A.country} ${A.oop_health_ppp_per_capita.toFixed(0)}</b> vs <b>${B.country} ${B.oop_health_ppp_per_capita.toFixed(0)}</b> international dollars per person (${B.oop_health_ppp_year}). `+
     `OOP share of total health spending is ${A.oop_health_share_pct.toFixed(1)}% vs ${B.oop_health_share_pct.toFixed(1)}%. This reflects utilization and health-system design as well as prices.`;
 
@@ -363,7 +363,7 @@ function render(){
   const abs=Math.abs(ad);
   let label = abs<.2 ? "Similar" : abs<.55 ? (ad>0?"Somewhat easier":"Somewhat harder") : (ad>0?"Noticeably easier":"Noticeably harder");
   setVal("adminValue",label,cls(ad,true,.08));
-  $("#adminText").textContent="Broad public-administration environment, not a count of forms or waiting hours.";
+  $("#adminText").textContent="How smooth public administration tends to be.";
   $("#adminWhy").innerHTML=`World Bank Government Effectiveness: <b>${A.country} ${A.government_effectiveness_wgi.toFixed(2)}</b> vs <b>${B.country} ${B.government_effectiveness_wgi.toFixed(2)}</b> (${B.wgi_year}). `+
     `This is only a proxy for administrative friction and does not model your citizenship, visa status or a specific immigration procedure.`;
 
