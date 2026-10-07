@@ -211,11 +211,11 @@ details[open] summary{margin-bottom:8px}
     </article>
 
     <article class="card">
-      <div class="kicker">🙂 Life satisfaction</div>
+      <div class="kicker">🙂 Life evaluation</div>
       <div class="value" id="happyValue"></div>
       <div class="subtitle" id="happyText"></div>
       <div class="bar"><div class="fill" id="happyBar"></div></div>
-      <div class="badge">Migrant-adjusted estimate</div>
+      <div class="badge">Rough migrant-group benchmark</div>
       <div class="details"><details><summary>Why this result?</summary><div class="why" id="happyWhy"></div></details></div>
     </article>
 
@@ -334,12 +334,16 @@ function render(){
   const hEst=hA + tau*(hB-hA);
   const hA100=hA*10, hB100=hB*10, hEst100=hEst*10;
   const hDelta100=hEst100-hA100;
-  setVal("happyValue",signed(hDelta100,1)+" pts",cls(hDelta100,true,.5));
-  $("#happyText").textContent=`Estimated life satisfaction: ${hEst100.toFixed(1)} / 100`;
+  setVal("happyValue","≈"+hEst100.toFixed(0)+" / 100",cls(hDelta100,true,.5));
+  $("#happyText").textContent=(hDelta100 < -2 ? "Rough migrant-group benchmark; destination pull is lower." :
+      hDelta100 > 2 ? "Rough migrant-group benchmark; destination pull is higher." :
+      "Rough migrant-group benchmark; little directional change.");
   $("#happyBar").style.width=Math.max(0,Math.min(100,hEst100))+"%";
-  $("#happyWhy").innerHTML=`WHR country averages are on a 0–10 ladder. For readability we multiply them by 10, so ${A.country} is <b>${hA100.toFixed(1)}/100</b> and ${B.country} is <b>${hB100.toFixed(1)}/100</b>. `+
-    `The migrant-adjusted estimate moves 65% of the country gap: <b>${hEst100.toFixed(1)}/100</b>, a change of <b>${signed(hDelta100,1)} points</b>. `+
-    `<br><b>Why points, not percent?</b> The life-evaluation scale is not a ratio scale, so “10% happier” would be misleading.`;
+  $("#happyWhy").innerHTML=`<b>What this is:</b> a rough group-level benchmark, not a forecast of your personal happiness. `+
+    `WHR life evaluation is ${hA100.toFixed(1)}/100 in ${A.country} and ${hB100.toFixed(1)}/100 in ${B.country}. `+
+    `Our European migrant analysis found that migrant-group life satisfaction often sits roughly two-thirds of the way toward the destination-country level, so the calculator uses 65% as a deliberately simple heuristic. `+
+    `<br><b>Important limitation:</b> the migration coefficient comes from ESS life-satisfaction data, while WHR uses the Cantril life-evaluation ladder. They are related but not identical measures, so this number should be read as a directional benchmark, not “you will lose ${Math.abs(hDelta100).toFixed(1)} points of happiness.” `+
+    `<br><b>Display scale:</b> WHR 0–10 is multiplied by 10 for readability. We do not report percent change because the scale has no meaningful ratio zero.`;
 
   // HALE
   const hd=num(B.hale_years)-num(A.hale_years);
