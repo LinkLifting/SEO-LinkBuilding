@@ -286,6 +286,12 @@ const TOP_DESTINATIONS = {"FIN":[{"name":"Sweden","source_name":"Sweden","iso":"
 const fb = document.getElementById("jsFallback"); if (fb) fb.style.display = "none";
 let scenario = "same";
 const $ = s => document.querySelector(s);
+const scenarioText={
+  same:"You expect your income and work arrangement to stay roughly the same.",
+  local:"You expect to earn and work under destination-country conditions.",
+  no_earned:"Your income does not depend on local employment."
+};
+function updateScenarioNote(){ $("#assumption").textContent=scenarioText[scenario]; }
 
 
 
@@ -358,6 +364,7 @@ function renderPopularDestinations(){
 }
 
 function render(){
+  updateScenarioNote();
   renderPopularDestinations();
   const from=$("#from").value, to=$("#to").value;
   const grid=document.querySelector(".grid");
@@ -466,13 +473,6 @@ function render(){
     `<br><b>What this means:</b> a broad everyday-safety perception, not a complete crime rate. It can reflect crime, policing, trust, neighborhood conditions and other factors. `+
     `<br><b>Important limitation:</b> national averages hide city and neighborhood differences, and perceptions can differ by gender and other groups.`;
 
-  // Assumption line
-  const scenarioText={
-    same:"You expect your income and work arrangement to stay roughly the same.",
-    local:"You expect to earn and work under destination-country conditions.",
-    no_earned:"Your income does not depend on local employment."
-  };
-  $("#assumption").textContent=scenarioText[scenario];
 
   // Deterministic human summary
   const ups=[], downs=[];
