@@ -108,15 +108,15 @@ details[open] summary{margin-bottom:8px}
 <body>
 
 <header class="article-shell">
-  <div class="article-kicker">Mike's Balance · Pass 1 draft</div>
+  <div class="article-kicker">Mike's Balance · editorial draft</div>
   <h1>Would you be better off in another country?</h1>
-  <p class="article-deck">Country rankings compare residents. A migrant carries income, habits, history, health and expectations across the border. That makes relocation a different statistical problem.</p>
-  <div class="article-meta">Relocation reality check · 54 countries · draft for editorial review</div>
+  <p class="article-deck">A country can be richer, safer, healthier or happier on average without giving a newcomer the full advantage. The useful question is not which country ranks higher, but which parts of life actually change when you move.</p>
+  <div class="article-meta">Relocation reality check · 54 countries · country-level evidence, not a personal forecast</div>
   <div class="article-lede">
-    <p>Country rankings are easy to read because they compress a place into a number. They are much harder to use for a move. A Finn considering Spain does not become a statistical Spaniard at passport control, and the answer changes dramatically depending on whether the person keeps a Finnish income, takes a Spanish job, or lives on a pension.</p>
-    <p>That was the problem that broke our first model. The useful question was not “Which country is better?” but <strong>which parts of a country advantage actually transfer to a migrant, and how quickly?</strong></p>
+    <p>A Finn who moves to Spain does not become a statistical Spaniard at passport control. The person arrives with an income source, a work arrangement, a health history, habits, expectations and a social network. At the same time, prices, institutions and the surrounding labour market really do change.</p>
+    <p>That distinction turned out to be the central problem in building this calculator. <strong>Relocation is not a comparison between two average residents. It is a transfer problem.</strong></p>
   </div>
-  <div class="article-callout"><strong>Core idea:</strong> country advantage is not the same thing as migration effect. Some outcomes travel with the person, some are imposed by the destination, and some sit awkwardly in between.</div>
+  <div class="article-callout"><strong>The question:</strong> what travels with you, what the destination changes immediately, and what appears to move only partly or over time?</div>
 </header>
 
 <div class="calc-wrap">
@@ -127,7 +127,7 @@ details[open] summary{margin-bottom:8px}
     <p>See what changes when you move: money, work, happiness, healthy years, healthcare, bureaucracy and safety. Country-level estimates, not a personal forecast.</p>
 
     <div class="controls">
-      <div class="control"><label for="from">FROM</label><select id="from">
+      <div class="control"><label for="from">ORIGIN COUNTRY</label><select id="from">
 <option value="" selected disabled>Select origin country</option>
 <option value="ARG">Argentina</option>
 <option value="AUS">Australia</option>
@@ -185,7 +185,7 @@ details[open] summary{margin-bottom:8px}
 <option value="VNM">Vietnam</option>
 </select></div>
       <div class="arrow">→</div>
-      <div class="control"><label for="to">TO</label><select id="to">
+      <div class="control"><label for="to">DESTINATION COUNTRY</label><select id="to">
 <option value="" selected disabled>Select destination country</option>
 <option value="ARG">Argentina</option>
 <option value="AUS">Australia</option>
@@ -262,7 +262,7 @@ details[open] summary{margin-bottom:8px}
 
 
     <div class="summary">
-      <strong id="pairTitle">Finland → Spain</strong>
+      <strong id="pairTitle"></strong>
       <div class="sentence" id="summarySentence"></div>
     </div>
   </section>
@@ -333,94 +333,108 @@ details[open] summary{margin-bottom:8px}
 </div>
 
 <main class="article-body">
-  <h2>The first model was wrong in a useful way</h2>
-  <p>The obvious way to build a relocation calculator is to put two national averages side by side. Country A has higher income, country B has lower prices, country A reports more life satisfaction, country B has longer healthy life expectancy. Add enough indicators and the better country should reveal itself.</p>
-  <p>But this quietly assumes that the migrant is replaced by the average resident of the destination. That is not what migration does. Your salary may travel with you or disappear. Your work schedule may stay unchanged or become local. Your exposure to prices, public administration and neighbourhood safety changes quickly, while your health history, social network, expectations and reference groups do not reset overnight.</p>
-  <p>The calculator therefore treats relocation as a vector rather than a score. There is no master index saying that one extra healthy year is worth a certain amount of income or that safety should outweigh bureaucracy. Each dimension is shown separately because the trade-off is the result.</p>
-
-  <h2>Money is where the simple model breaks first</h2>
-  <p>Consider Finland → Spain. In the frozen data snapshot used by the current prototype, the World Bank price-level comparison implies that the same spendable income would buy roughly 34% more in Spain. But if we switch to the broad local-income benchmark, Spain's GNI per capita at purchasing-power parity is about 11% lower than Finland's in the same snapshot. The direction flips before we have changed anything about health, happiness or safety.</p>
-  <p>This is why the calculator asks how income and work behave after the move. “Same income and work” uses the price-level ratio. “Local income and work” switches to a broad destination-country income benchmark and local work hours. “Pension / capital / savings” again behaves more like portable income, while explicitly leaving tax treatment outside the model.</p>
+  <h2>A move is not a country swap</h2>
+  <p>The first version of this project followed the obvious logic of country rankings. Compare income, prices, work, happiness, health, safety and institutions; then decide which side looks better. The problem is that national averages describe populations, while a migrant is the same person observed in a new environment.</p>
+  <p>Once we treated relocation that way, the indicators separated into three different classes.</p>
 
   <div class="table-wrap">
     <table>
-      <thead><tr><th>Finland → Spain</th><th>Prototype result</th><th>What it actually means</th></tr></thead>
+      <thead><tr><th>What kind of variable?</th><th>Examples</th><th>What happens after a move?</th></tr></thead>
       <tbody>
-        <tr><td><strong>Money, same income</strong></td><td>about +33.8%</td><td>Purchasing-power change if spendable income stays roughly unchanged.</td></tr>
-        <tr><td><strong>Money, local market</strong></td><td>about −11.0%</td><td>Broad GNI-PPP benchmark, not a prediction of your salary.</td></tr>
-        <tr><td><strong>Work, local market</strong></td><td>about +2.9 h/week</td><td>Difference in modelled national average weekly actual hours.</td></tr>
-        <tr><td><strong>Life evaluation</strong></td><td>about −0.80 on a 0–10 scale</td><td>A rough migrant-group adjustment, not a personal forecast.</td></tr>
-        <tr><td><strong>Healthy life expectancy</strong></td><td>about +1.2 years</td><td>Destination-population difference only.</td></tr>
-        <tr><td><strong>Out-of-pocket healthcare</strong></td><td>about +13.5%</td><td>Observed per-capita PPP spending, not your medical bill.</td></tr>
-        <tr><td><strong>Feel safe walking alone at night</strong></td><td>−7 percentage points</td><td>National Gallup perception measure.</td></tr>
+        <tr><td><strong>Portable</strong></td><td>Remote income, existing job</td><td>May travel almost unchanged unless the move itself alters the arrangement.</td></tr>
+        <tr><td><strong>Destination exposure</strong></td><td>Prices, local labour market, administration, everyday safety</td><td>The new environment matters quickly, although country averages remain coarse proxies.</td></tr>
+        <tr><td><strong>Adaptive or accumulated</strong></td><td>Life evaluation, health</td><td>Origin history remains relevant. Some outcomes converge partly; others cannot be assigned a defensible universal transfer rate.</td></tr>
       </tbody>
     </table>
   </div>
-  <p class="small-note">The figures above are calculations from the calculator's stored source snapshot. Upstream databases are revised over time, so a later live database query may differ slightly.</p>
 
-  <p>We briefly tried to make the financial branch more personal. OECD <em>Taxing Wages 2026</em> makes it possible, for covered countries, to compare after-tax outcomes for standardized household types. In our test, household structure sometimes changed the relocation result enough to reverse its sign. That made household composition scientifically relevant, not decorative.</p>
-  <p>It also exposed a product problem. OECD-style tax and benefit modelling is rich for member countries but much patchier across the global set of destinations we wanted to support. Asking every user detailed family questions and then quietly falling back to a cruder model in many countries would create an illusion of precision. So the current version does something less ambitious and more honest: it uses a broad local-income benchmark and tells the reader what it cannot know.</p>
+  <p>This is why the calculator has no overall “better country” score. The mechanism is different from card to card, and adding the numbers together would hide exactly what we are trying to learn.</p>
 
-  <h2>The harder question: how much of a country moves into the migrant?</h2>
-  <p>Money can be split into scenarios because the mechanism is concrete. Happiness is harder. The World Happiness Report ranks resident populations by the Cantril Ladder, a 0–10 evaluation of life as a whole. It does not measure daily cheerfulness, and it does not claim that moving to a country with a higher average score will simply replace your old score with the new national mean.</p>
-  <p>This distinction matters because our earlier Mike's Balance investigation of country happiness rankings found that the ranking depends on what is being asked. Life evaluation, life satisfaction and direct feelings of happiness can produce different country orders, and numerical response habits differ across cultures. A destination-country average is therefore informative, but it is not a ready-made migration effect.</p>
+  <h2>What follows you: the same move can reverse its financial sign</h2>
+  <p>Finland → Spain is a useful stress test because the answer changes before we touch happiness, health or safety. In the frozen data snapshot used by the calculator, keeping the same spendable income produces about <strong>34% more purchasing power</strong> in Spain because the general price level is lower. But if the person instead enters the destination economy and we substitute Spain's broad GNI-per-capita PPP benchmark for Finland's, the comparison becomes about <strong>11% lower</strong>.</p>
+  <p>Neither number predicts an individual's salary. The first is a price-level calculation under a strong assumption: spendable income is portable. The second is deliberately crude, using World Bank GNI per capita at purchasing-power parity as a broad country benchmark rather than pretending we know the person's occupation, employer, tax status or bargaining power. [1]</p>
 
-  <p>Migration data nevertheless show something stronger than “people carry their happiness with them unchanged.” In an exploratory reanalysis at The Null Institute, we pooled European Social Survey rounds 1–11 and compared origin-country natives, migrants from that origin, and destination-country natives within matched survey rounds. A stricter adult post-1991 analysis retained 20 origin-destination routes with 2,361 migrants. The estimated destination-transfer slope for life satisfaction was 0.662, with a route-bootstrap 95% interval of 0.564–0.844. A separate ESS global-happiness item produced a nearly identical central estimate.</p>
-  <p>The coefficient is easiest to understand geometrically. Zero would mean migrant-group life satisfaction stays at the origin-country level; one would mean it reaches the destination-country level. Roughly two-thirds means the migrant group sits substantially toward the destination, but not all the way there. It does <em>not</em> mean that “the country causes 66% of happiness.” The study was observational, migrants choose both whether and where to move, and selective return remains unresolved.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Finland → Spain</th><th>Prototype result</th><th>Interpretation</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Same income & work</strong></td><td>about +33.8%</td><td>Purchasing-power change if spendable income remains roughly unchanged.</td></tr>
+        <tr><td><strong>Local income & work</strong></td><td>about −11.0%</td><td>Broad destination-country income benchmark, not expected personal pay.</td></tr>
+        <tr><td><strong>Local work hours</strong></td><td>about +2.9 h/week</td><td>Difference in national average weekly actual hours in the stored ILOSTAT snapshot. [2]</td></tr>
+      </tbody>
+    </table>
+  </div>
 
-  <p>We then tried to break the result. Migrants moving toward destinations with lower native life satisfaction also tended to shift downward, which weakens the simplest story that migrants look happier merely because unusually positive people are more likely to leave. We also tested whether migrants simply learn to use 0–10 scales the way destination residents do. Response style itself did converge, especially endpoint use, but within-person standardisation and rank-based adjustments did not erase the destination signal.</p>
-  <p>That pattern is consistent with earlier work rather than standing alone. The World Happiness Report 2018 estimated that migrant life evaluation reflected roughly three-quarters of the origin-to-destination happiness gap, and Helliwell, Shiplett and Bonikowska found immigrant life-satisfaction distributions in Canada and the United Kingdom much more destination-like than source-country-like. Yet a rare migration lottery from Tonga to New Zealand provides a useful warning: migration improved several objective outcomes and mental health while one direct happiness measure declined. Different dimensions of wellbeing can move in opposite directions.</p>
+  <p>We tested a more personalised route using OECD <em>Taxing Wages 2026</em>, which models taxes and cash benefits for eight household types and different earnings levels. Household composition sometimes changed our test comparisons enough to reverse the sign. [3] That made family structure scientifically relevant, but it also exposed a coverage problem: a sophisticated OECD model cannot be applied consistently to a global set of destinations.</p>
+  <p>The current calculator therefore asks less. It distinguishes portable income, local income and income from pension/capital/savings. A previously tested 50/50 mixed scenario was removed because “half portable” was a convenient convention, not an observed fact.</p>
 
-  <p>The calculator therefore uses 0.65 as a deliberately rough group-level heuristic for the happiness card. That number is close to our ESS estimate and to a reanalysis of published World Happiness Report migration flows, but it is still a modelling choice. There is another mismatch to keep visible: the calculator applies an ESS-derived migration coefficient to the World Happiness Report's Cantril life-evaluation scores. The measures are related, not identical. The sign and rough magnitude are more defensible than the second decimal place.</p>
+  <h2>What the destination changes quickly</h2>
+  <p>Some conditions really are encountered after arrival. Consumer prices are paid where you live. A local employee enters the destination labour market. Administrative systems become the systems you must use. The local environment also changes exposure to public safety and healthcare institutions.</p>
+  <p>That does not make the national indicators personal predictions. Gallup's safety measure, for example, asks whether people feel safe walking alone at night where they live. It captures an everyday perception of security, not recorded crime, and national averages conceal large neighbourhood and subgroup differences. [4] The calculator therefore shows the change in percentage points rather than presenting safety as a personal probability.</p>
+  <p>“Bureaucracy” is even more explicitly a proxy. We use the World Bank's Government Effectiveness measure, which combines perception-based evidence about public services, civil-service quality, policy implementation and government credibility. The World Bank cautions that these are estimates with margins of error, not definitive ratings of a government or of one immigration office. [5]</p>
+  <p>Out-of-pocket healthcare spending is kept separate from general prices for the same reason. It reflects not only prices but also utilisation and health-system design. A country can be cheaper overall while its residents spend more directly on healthcare. Combining the two into a single cost-of-living score would erase that distinction. [6]</p>
 
-  <h2>Health refused the same shortcut</h2>
-  <p>It was tempting to do for health what we did for life satisfaction: estimate a universal “migration transfer” and move each person part of the way toward the destination's healthy life expectancy. The evidence did not justify it.</p>
-  <p>WHO healthy life expectancy, or HALE, estimates how many years a newborn could expect to live in full health under a population's current mortality and morbidity conditions. It is useful for comparing health environments, but it mixes healthcare, disease burden, behaviour, early-life history and many other exposures. For Finland and Spain, the prototype shows about 69.9 versus 71.1 healthy years. That is a real population contrast, but it is not evidence that a Finnish adult who moves to Spain gains 1.2 healthy years.</p>
-  <p>Migrant-health research makes the problem more complicated, not less. Systematic reviews describe a “healthy immigrant effect” in some populations, often strongest soon after migration, but it is not uniform across age, outcome, origin or destination. Other work finds convergence toward destination health patterns over time, while morbidity and mortality can even point in different directions. Selection into migration matters too: people who migrate voluntarily are often not a random sample of those who stay.</p>
-  <p>So the calculator deliberately treats health differently from happiness. HALE is shown as destination context with no transfer coefficient. That asymmetry is a feature, not an inconsistency: the model becomes less elegant when the evidence becomes less uniform.</p>
+  <h2>What appears to move partly: life evaluation</h2>
+  <p>Subjective wellbeing is where the transfer problem becomes more interesting. A country happiness ranking describes people already living there. It does not tell us what happens to someone who arrives from somewhere else.</p>
+  <p>Our earlier Mike's Balance investigation, <a href="https://mikesbalance.com/can-a-country-make-you-happier/">“Can a Country Make You Happier?”</a>, showed why the word <em>happiness</em> needs care. The World Happiness Report's Cantril Ladder is an overall evaluation of life, not a count of pleasant emotions. Life satisfaction, direct feelings of happiness and yesterday's positive or negative experiences can produce noticeably different country patterns even when they all sound like “happiness” in casual language. [7]</p>
+  <p>Migration studies nevertheless suggest that life evaluation is not fixed at the origin-country level. The World Happiness Report 2018 found that immigrant life evaluation depended strongly on destination-country levels, describing a rough destination weight of about three-quarters in its cross-country analysis. Its matched comparison also estimated an average gain of 0.47 points on the 0–10 Cantril Ladder among international migrants, while explicitly noting that many migrants did not gain. [8]</p>
+  <p>Helliwell, Shiplett and Bonikowska reached a similar broad conclusion using immigrants to Canada and the United Kingdom: immigrant life-satisfaction distributions looked much more like those of destination populations than those of source populations. [9]</p>
+  <p>We then used our own analysis as a stress test rather than as the foundation of the claim. In an exploratory reanalysis at <a href="https://nullinstitute.org/research/migrant-life-satisfaction-convergence-response-style/">The Null Institute</a>, we pooled European Social Survey rounds 1–11. In a stricter adult post-1991 specification, 20 origin-destination routes involving 2,361 migrants produced a life-satisfaction destination-transfer slope of <strong>0.662</strong>, with a route-bootstrap 95% interval of 0.564–0.844. [10]</p>
+  <p>The interpretation is descriptive. A slope of zero would place migrant-group life satisfaction at the origin level; one would place it at the destination level. Roughly two-thirds means substantial destination alignment, not that “the country causes 66% of happiness.” Selection into migration, destination choice and selective return remain unresolved.</p>
+  <p>We also tested a measurement-based alternative: perhaps migrants simply learn to use 0–10 response scales the way destination residents do. Response style itself did converge, especially endpoint use, but within-person standardisation and rank-based transformations did not remove the destination signal. That makes pure response-style assimilation an incomplete explanation, not a causal proof of environmental effects. [10]</p>
+  <p>A rare natural experiment is useful precisely because it refuses to make the story neat. In the Tonga → New Zealand migration lottery, successful migrants gained substantially on several objective outcomes and mental health, yet one direct happiness measure declined relative to unsuccessful lottery applicants. [11] Different dimensions of wellbeing can move in opposite directions.</p>
+  <p>The calculator therefore uses <strong>0.65</strong> as a rough group-level convergence heuristic for life evaluation. It is close to our ESS estimate and broadly compatible with earlier migration evidence. But it remains a modelling convention, and it is applied to World Happiness Report Cantril scores even though the ESS coefficient comes mainly from a life-satisfaction question. The broad direction is much more defensible than the second decimal place.</p>
 
-  <h2>The “easy” indicators are proxies too</h2>
-  <p>Several other cards look more straightforward because they describe conditions a person encounters after moving. ILOSTAT provides modelled average weekly hours actually worked, so the local-work scenario can compare national labour-time environments. But a remote worker keeping the same employer should not inherit the destination average, which is why the same-work scenario forces the work change to zero by assumption.</p>
-  <p>Healthcare costs are kept separate from general purchasing power for a similar reason. Out-of-pocket spending per person reflects prices, utilisation and health-system design. Spain can be cheaper overall than Finland while showing higher observed out-of-pocket health spending in the prototype snapshot. Folding that number directly into a “money score” would double-count some costs and pretend to know the user's medical needs.</p>
-  <p>Safety is based on Gallup's question about whether people feel safe walking alone at night where they live. It is a useful everyday-security measure, but it is not a crime rate. In 2024, 73% of adults globally answered yes, and gender differences were substantial: women reported feeling safe less often than men in many countries. A national percentage therefore hides neighbourhood, gender and other subgroup differences.</p>
-  <p>For bureaucracy we use the World Bank's Government Effectiveness measure as a proxy for administrative friction. The indicator combines perception-based inputs from many sources about public services, civil service quality, policy implementation and government credibility. The World Bank itself cautions that WGI values are estimates rather than definitive ratings. A visa office, tax authority or municipal registration process can still behave very differently from the national composite.</p>
+  <h2>Health is where the transfer model fails</h2>
+  <p>Once happiness had a rough convergence coefficient, it was tempting to give health one too. We could take the destination's healthy life expectancy and move the migrant some percentage of the way toward it. That would make the calculator beautifully symmetrical.</p>
+  <p>We rejected it.</p>
+  <p>WHO healthy life expectancy (HALE) is a population measure combining mortality and morbidity. In our frozen snapshot, Spain's HALE is about 1.2 years higher than Finland's. [12] That is useful information about the two populations. It is not evidence that a Finnish adult gains 1.2 healthy years by moving to Spain, nor that some fixed fraction of those years should be credited after migration.</p>
+  <p>The migrant-health literature is too heterogeneous for a universal transfer coefficient. A systematic review of 78 Canadian studies found that the “healthy immigrant effect” varied by stage of life and outcome, was stronger for mortality than morbidity, and tended to be stronger among more recent immigrants. The authors explicitly concluded that there was no uniform foreign-born health advantage across outcomes and the life course. [13]</p>
+  <p>Health therefore stays in the calculator as <strong>population context</strong>. Unlike happiness, it receives no migrant adjustment. The model becomes less elegant at exactly the point where the evidence becomes less uniform.</p>
 
-  <h2>Where people actually go is a different question again</h2>
-  <p>The five destinations shown under the origin selector come from the UN DESA International Migrant Stock 2024 bilateral dataset. It covers 233 countries and areas and estimates where people from each origin are living. That is a stock, not a flow. It should not be read as “where people moved last year” or as a popularity poll for current relocation choices.</p>
-  <p>This distinction matters especially where history created large diasporas or borders changed. UN DESA fully reassessed trends for 60 countries and areas in the 2024 edition; for many others, the new estimates extrapolate from the 2020 edition. The Top 5 is therefore a factual context layer, not a recommendation engine.</p>
-  <p>We also chose not to filter the list to destinations supported by the calculator. If a real Top-5 destination lacks the rest of the comparison data, it stays in its true rank and appears greyed out. Hiding it would make the interface cleaner by making the data less true.</p>
+  <h2>Where people actually live abroad</h2>
+  <p>After choosing an origin country, the calculator shows five common destinations using the UN DESA <em>International Migrant Stock 2024</em> bilateral dataset. [14] The word <em>stock</em> matters: it describes where migrants from an origin are living, not where people moved during 2024 and not which destinations are currently “best”. Historical diasporas, changing borders and older migration waves can dominate the ranking.</p>
+  <p>If one of the real top-five destinations is outside the calculator's 54-country coverage, it remains visible but disabled. Replacing it with the next supported country would make the interface cleaner and the data less true.</p>
 
-  <h2>Why the calculator asks so little</h2>
-  <p>During development, the input form kept trying to grow. Household composition matters for taxes and transfers. Occupation matters for wages and hours. Age, education and sex can affect labour-market outcomes. City choice can dominate national housing averages. Political and environmental risk can matter more than any of the current cards for a particular person.</p>
-  <p>We tested some of these branches and then removed them from the MVP. The reason was not that the variables are unimportant. It was that every new question needs both a mechanism strong enough to change the result and comparable data across most countries. Otherwise the calculator becomes a questionnaire whose precision is mostly theatre.</p>
-  <p>We even tested a mixed 50/50 income scenario. It was useful as a stress test but arbitrary as a default model: without knowing what share of a person's income is actually portable, “50/50” is a convention dressed as measurement. The public version therefore keeps only the three scenarios that have a clear interpretation.</p>
+  <h2>Why we stopped adding questions</h2>
+  <p>A more personal calculator could ask about household composition, occupation, age, education, city, visa status, tax residence, political preferences, health conditions and climate tolerance. Many of those variables genuinely matter. That is exactly why casually adding them is dangerous.</p>
+  <p>An input earns its place only if it has a plausible mechanism, can materially alter the result and is supported by comparable data across most destinations. Household structure passed the first two tests but not the global-coverage test. Several other tempting inputs failed even earlier.</p>
+  <p>The aim is therefore not maximum personalisation. It is the smallest model that makes the important assumptions visible.</p>
 
-  <h2>What the calculator can, and cannot, tell you</h2>
-  <p>The more accurate model of relocation is not “country B is 17% better than country A.” It is a bundle of changes with different transfer mechanisms. Prices can affect you almost immediately. A local labour market matters only if you enter it. Public administration and neighbourhood safety become part of the environment, but national averages remain coarse. Life evaluation appears to move substantially toward destination-country levels at the group level. Population health statistics are informative context but cannot be translated into personal years gained with a universal coefficient.</p>
-  <p>This is why the calculator refuses to produce one grand score. A person may rationally accept lower local income for more purchasing power, or higher healthcare spending for longer healthy life expectancy, or a small fall in average life evaluation for a work arrangement that matters more to them. The data can expose the trade-off. They cannot supply the user's values.</p>
-  <p>The most interesting unresolved question is causal. When migrant-group life evaluation converges toward a destination, how much comes from material conditions, institutions, social relationships, reference-group change, numerical response style, selection into migration and selective return? Existing evidence says the destination matters. It does not yet tell us how to divide the credit cleanly.</p>
+  <h2>How to read the result</h2>
+  <p>The calculator is best used as a contradiction detector. If every card points in the same direction, the move may deserve closer attention. More often, the interesting result is that the cards disagree.</p>
+  <p>A person keeping a remote salary may gain purchasing power in a lower-price country while entering a population with lower average life evaluation. Someone taking a local job may get the opposite financial answer. A destination may have higher healthy life expectancy but worse perceived safety, or lower general prices but higher out-of-pocket healthcare spending.</p>
+  <p>No statistical rule can decide how much money is worth one point of safety or one year of population HALE. Producing a grand score would require value judgements disguised as mathematics.</p>
+  <p>The more useful output is therefore a map of trade-offs, with each number labelled according to what kind of evidence it actually represents: a direct scenario calculation, a destination exposure, a group-level migration heuristic or population context.</p>
+
+  <h2>The question that remains</h2>
+  <p>The broad lesson is that country advantage and migration effect are different quantities. The next scientific problem is to estimate <em>transferability</em> more directly: for each outcome, how much of the origin-destination gap is experienced by migrants, on what timescale, and through which mechanism?</p>
+  <p>Life evaluation gives us evidence of substantial but incomplete convergence. Health warns us that no universal rule should be assumed. Income shows that the answer can change sign depending on what the migrant carries across the border.</p>
+  <p>That may be less satisfying than a ranking of the world's best places to live. It is much closer to the question a person actually has when deciding whether to move.</p>
 
   <h2>References</h2>
   <ol class="source-list">
-    <li>United Nations DESA Population Division. <a href="https://www.un.org/development/desa/pd/content/international-migrant-stock">International Migrant Stock 2024</a>.</li>
     <li>World Bank. <a href="https://data.worldbank.org/indicator/PA.NUS.PPPC.RF">Price level ratio of PPP conversion factor to market exchange rate</a>; <a href="https://data.worldbank.org/indicator/NY.GNP.PCAP.PP.CD">GNI per capita, PPP</a>.</li>
     <li>International Labour Organization. <a href="https://ilostat.ilo.org/data/">ILOSTAT data catalogue</a>, average weekly hours actually worked.</li>
-    <li>Eurostat. <a href="https://ec.europa.eu/eurostat/en/web/products-eurostat-news/w/ddn-20260618-2">Household consumption price levels across the EU in 2025</a>.</li>
-    <li>OECD. <a href="https://www.oecd.org/en/publications/taxing-wages-2026_3a5169ef-en.html">Taxing Wages 2026</a>.</li>
-    <li>World Happiness Report. <a href="https://www.worldhappiness.report/ed/2026/international-evidence-on-happiness-and-social-media/">International evidence on happiness and social media, 2026</a>.</li>
-    <li>Nikitin I. <a href="https://nullinstitute.org/research/migrant-life-satisfaction-convergence-response-style/">How Much of Migrant Life-Satisfaction Convergence Is Measurement?</a> The Null Institute, 2026. Exploratory observational reanalysis.</li>
-    <li>Helliwell JF et al. <a href="https://files.worldhappiness.report/WHR18.pdf">World Happiness Report 2018</a>, chapters on international migration and wellbeing.</li>
-    <li>Helliwell JF, Shiplett H, Bonikowska A. <a href="https://doi.org/10.1111/caje.12474">Migration as a test of the happiness set-point hypothesis</a>. Canadian Journal of Economics, 2020.</li>
-    <li>Stillman S, Gibson J, McKenzie D, Rohorua H. <a href="https://doi.org/10.1016/j.worlddev.2013.07.003">Miserable Migrants?</a> World Development, 2015.</li>
-    <li>World Health Organization. <a href="https://data.who.int/dashboards/global-progress/hale">Healthy Life Expectancy (HALE)</a>.</li>
-    <li>Vang ZM et al. <a href="https://pubmed.ncbi.nlm.nih.gov/27809589/">Are immigrants healthier than native-born Canadians? A systematic review</a>. Ethnicity & Health, 2017.</li>
-    <li>World Bank / WHO Global Health Expenditure Database. <a href="https://data.worldbank.org/indicator/SH.XPD.OOPC.PP.CD">Out-of-pocket expenditure per capita, PPP</a>.</li>
-    <li>Gallup. <a href="https://www.gallup.com/analytics/693542/what-is-global-safety.aspx">What Is Global Safety?</a>, 2025 report using 2024 survey data.</li>
+    <li>OECD. <a href="https://www.oecd.org/en/publications/taxing-wages-2026_3a5169ef-en.html"><em>Taxing Wages 2026</em></a>.</li>
+    <li>Gallup. <a href="https://www.gallup.com/analytics/693542/what-is-global-safety.aspx">Global Safety / feeling safe walking alone at night</a>.</li>
     <li>World Bank. <a href="https://www.worldbank.org/en/publication/worldwide-governance-indicators">Worldwide Governance Indicators</a>.</li>
+    <li>WHO Global Health Expenditure Database / World Bank. <a href="https://data.worldbank.org/indicator/SH.XPD.OOPC.PP.CD">Out-of-pocket expenditure per capita, PPP</a>.</li>
     <li>Mike's Balance. <a href="https://mikesbalance.com/can-a-country-make-you-happier/">Can a Country Make You Happier? Happiness Rankings Explained</a>.</li>
+    <li>Helliwell JF et al. <a href="https://files.worldhappiness.report/WHR18.pdf"><em>World Happiness Report 2018</em></a>, international migration chapters.</li>
+    <li>Helliwell JF, Shiplett H, Bonikowska A. <a href="https://www.nber.org/papers/w22601">Migration as a Test of the Happiness Set Point Hypothesis</a>; published in <em>Canadian Journal of Economics</em>, 2020.</li>
+    <li>Nikitin I. <a href="https://nullinstitute.org/research/migrant-life-satisfaction-convergence-response-style/">How Much of Migrant Life-Satisfaction Convergence Is Measurement?</a> The Null Institute, 2026. Exploratory observational reanalysis; not peer reviewed.</li>
+    <li>Stillman S, Gibson J, McKenzie D, Rohorua H. <a href="https://doi.org/10.1016/j.worlddev.2013.07.003">Miserable Migrants? Natural Experiment Evidence on International Migration and Objective and Subjective Well-Being</a>. <em>World Development</em>, 2015.</li>
+    <li>World Health Organization. <a href="https://data.who.int/dashboards/global-progress/hale">Healthy Life Expectancy (HALE)</a>.</li>
+    <li>Vang ZM, Sigouin J, Flenon A, Gagnon A. <a href="https://pubmed.ncbi.nlm.nih.gov/27809589/">Are immigrants healthier than native-born Canadians? A systematic review</a>. <em>Ethnicity & Health</em>, 2017.</li>
+    <li>United Nations DESA Population Division. <a href="https://www.un.org/development/desa/pd/content/international-migrant-stock"><em>International Migrant Stock 2024</em></a>.</li>
   </ol>
 
-  <p style="margin-top:30px;font-size:13px;color:#6f7a80"><strong>Pass 1 draft:</strong> full research reconstruction. Final adversarial review, magazine edit, source tightening and WordPress architecture remain for the next pass.</p>
+  <div class="method" style="margin-top:30px">
+    <p><strong>Editorial evidence handoff</strong></p>
+    <p><strong>MB_EVIDENCE_TAKEAWAY:</strong> Migrant life satisfaction often shifts toward destination-country levels, while population health averages do not transfer directly.</p>
+    <p><strong>MB_EVIDENCE_SUPPORT:</strong> Our ESS reanalysis estimated a 0.662 destination-transfer slope; migrant-health evidence is too heterogeneous for an equivalent universal coefficient.</p>
+  </div>
 </main>
 
 <script>
