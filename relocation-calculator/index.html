@@ -211,7 +211,7 @@ details[open] summary{margin-bottom:8px}
     </article>
 
     <article class="card">
-      <div class="kicker">🙂 Life evaluation</div>
+      <div class="kicker">🙂 Life evaluation change</div>
       <div class="value" id="happyValue"></div>
       <div class="subtitle" id="happyText"></div>
       <div class="bar"><div class="fill" id="happyBar"></div></div>
@@ -334,16 +334,15 @@ function render(){
   const hEst=hA + tau*(hB-hA);
   const hA100=hA*10, hB100=hB*10, hEst100=hEst*10;
   const hDelta100=hEst100-hA100;
-  setVal("happyValue","≈"+hEst100.toFixed(0)+" / 100",cls(hDelta100,true,.5));
-  $("#happyText").textContent=(hDelta100 < -2 ? "Rough migrant-group benchmark; destination pull is lower." :
-      hDelta100 > 2 ? "Rough migrant-group benchmark; destination pull is higher." :
-      "Rough migrant-group benchmark; little directional change.");
+  setVal("happyValue",signed(hDelta100,1)+" pts",cls(hDelta100,true,.5));
+  $("#happyText").textContent=`${hA100.toFixed(1)} → ${hEst100.toFixed(1)} / 100 · rough migrant-group benchmark`;
   $("#happyBar").style.width=Math.max(0,Math.min(100,hEst100))+"%";
   $("#happyWhy").innerHTML=`<b>What this is:</b> a rough group-level benchmark, not a forecast of your personal happiness. `+
     `WHR life evaluation is ${hA100.toFixed(1)}/100 in ${A.country} and ${hB100.toFixed(1)}/100 in ${B.country}. `+
     `Our European migrant analysis found that migrant-group life satisfaction often sits roughly two-thirds of the way toward the destination-country level, so the calculator uses 65% as a deliberately simple heuristic. `+
-    `<br><b>Important limitation:</b> the migration coefficient comes from ESS life-satisfaction data, while WHR uses the Cantril life-evaluation ladder. They are related but not identical measures, so this number should be read as a directional benchmark, not “you will lose ${Math.abs(hDelta100).toFixed(1)} points of happiness.” `+
-    `<br><b>Display scale:</b> WHR 0–10 is multiplied by 10 for readability. We do not report percent change because the scale has no meaningful ratio zero.`;
+    `<br><b>Displayed change:</b> ${signed(hDelta100,1)} points on the 0–100 display scale (${hA100.toFixed(1)} → ${hEst100.toFixed(1)}). `+
+    `<br><b>Important limitation:</b> the migration coefficient comes from ESS life-satisfaction data, while WHR uses the Cantril life-evaluation ladder. They are related but not identical measures. Treat the sign and rough magnitude as a group-level directional benchmark, not a personal prediction. `+
+    `<br><b>Why points, not percent?</b> WHR 0–10 is multiplied by 10 for readability, but the scale has no meaningful ratio zero, so “10% less happy” would overstate what the measurement means.`;
 
   // HALE
   const hd=num(B.hale_years)-num(A.hale_years);
