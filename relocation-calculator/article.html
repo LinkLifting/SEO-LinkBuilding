@@ -646,7 +646,7 @@ function render(){
   if(safetyDelta>8) ups.push("safety");
   if(safetyDelta<-8) downs.push("safety");
   let sentence="";
-  if(ups.length&&downs.length) sentence=`One clear upside is ${ups[0]}; one clear trade-off is ${downs[0]}.`;
+  if(ups.length ? downs.length : 0) sentence=`One clear upside is ${ups[0]}; one clear trade-off is ${downs[0]}.`;
   else if(ups.length) sentence=`One clear positive change is ${ups[0]}.`;
   else if(downs.length) sentence=`One clear trade-off is ${downs[0]}.`;
   else sentence="This move looks fairly balanced on the current country-level indicators.";
